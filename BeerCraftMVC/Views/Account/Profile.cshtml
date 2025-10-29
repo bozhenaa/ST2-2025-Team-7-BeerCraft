@@ -3,66 +3,57 @@
     ViewData["Title"] = "Your Profile";
 }
 @section Styles {
-    <link rel="stylesheet" href="~/css/profile.css" /> 
-    <link rel="stylesheet" href="~/css/second_layout.css"/>
+    <link rel="stylesheet" href="~/css/profile.css" />
+    <link rel="stylesheet" href="~/css/second_layout.css" />
 }
+<div class="profile-grid-container">
+    <header class="profile-header">
+        <h1>@ViewData["Title"]</h1>
+    </header>
 
-<div class="profile-container">
-    <h1>@ViewData["Title"]</h1>
-    <hr />
+    <section class="profile-details-grid">
+        <h2 class="section-title-grid">Profile Details</h2>
+        <dl>
+            <dt>@Html.DisplayNameFor(model => model.Username)</dt>
+            <dd>@Html.DisplayFor(model => model.Username)</dd>
 
-    <div class="profile-details">
-        <dl class="row">
-            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Username)</dt>
-            <dd class="col-sm-9">@Html.DisplayFor(model => model.Username)</dd>
+            <dt>@Html.DisplayNameFor(model => model.Name)</dt>
+            <dd>@Html.DisplayFor(model => model.Name)</dd>
 
-            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Name)</dt>
-            <dd class="col-sm-9">@Html.DisplayFor(model => model.Name)</dd>
+            <dt>@Html.DisplayNameFor(model => model.Email)</dt>
+            <dd>@Html.DisplayFor(model => model.Email)</dd>
 
-            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Email)</dt>
-            <dd class="col-sm-9">@Html.DisplayFor(model => model.Email)</dd>
-
-            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.CreatedAt)</dt>
-            <dd class="col-sm-9">@Html.DisplayFor(model => model.CreatedAt)</dd>
+            <dt>@Html.DisplayNameFor(model => model.CreatedAt)</dt>
+            <dd>@Html.DisplayFor(model => model.CreatedAt)</dd>
         </dl>
-    </div>
-    <hr /> @* Разделител *@
-    <h4 class="mt-4">@Html.DisplayNameFor(model => model.InventoryItems)</h4>
+    </section>
 
-@if (Model.InventoryItems.Any())
-{
-        <table class="table table-sm table-hover inventory-table mt-3">
-            <thead>
-                <tr>
-                    <th>Ingredient</th>
-                    <th class="text-end">Quantity</th>
-
-                </tr>
-            </thead>
-            <tbody>
+    <section class="profile-inventory-grid">
+        <h2 class="section-title-grid">@Html.DisplayNameFor(model => model.InventoryItems)</h2>
+        @if (Model.InventoryItems.Any())
+        {
+            <ul class="inventory-list-grid">
                 @foreach (var item in Model.InventoryItems)
                 {
-                    <tr>
-                        <td>@Html.DisplayFor(modelItem => item.IngredientName)</td>
-                        <td class="text-end">@Html.DisplayFor(modelItem => item.Quantity)</td>
-                        @* <td>
-                        <a asp-controller="Inventory" asp-action="Edit" asp-route-id="@item.IngredientId" class="btn btn-sm btn-outline-primary">Edit</a>
-                    </td> *@
-                    </tr>
+                    <li>
+                        <span class="inv-name">@Html.DisplayFor(modelItem => item.IngredientName)</span>
+                        <span class="inv-quantity">@Html.DisplayFor(modelItem => item.Quantity)</span>
+                    </li>
                 }
-            </tbody>
-        </table>
-}
-else
-{
-        <p>Your inventory is empty.</p>
-}
-    <div class="profile-actions mt-4">
-    <div class="profile-actions mt-4">
-        <a asp-action="EditProfile" asp-route-id="@Model.UserId" class="btn btn-primary">Edit Profile</a> 
-        <form asp-controller="" asp-action="" method="post">
-            <button type="submit" class="btn btn-secondary">Update inventory</button>
-        </form>
-    </div>
+            </ul>
+        }
+        else
+        {
+            <p class="empty-message">Your inventory is empty.</p>
+        }
+        <div class="inventory-actions-grid">
+            <a asp-controller="Inventory" asp-action="Index" class="btn btn-sm btn-outline-primary">Manage Inventory</a>
+        </div>
+    </section>
 
-</div>
+    <footer class="profile-actions-grid">
+        <a asp-action="EditProfile" asp-route-id="@Model.UserId" class="btn btn-primary">Edit Profile</a>
+        <form asp-controller="Account" asp-action="Logout" method="post">
+            <button type="submit" class="btn btn-secondary">Logout</button>
+        </form>
+    </footer>

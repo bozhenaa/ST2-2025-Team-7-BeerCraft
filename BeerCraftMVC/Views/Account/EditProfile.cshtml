@@ -6,38 +6,40 @@
     <link rel="stylesheet" href="~/css/profile.css" /> 
     <link rel="stylesheet" href="~/css/second_layout.css"/>
 }
+<div class="profile-grid-container edit-profile-form"> @* Добавен е допълнителен клас за специфични стилове, ако трябват *@
+    <header class="profile-header">
+        <h1>@ViewData["Title"]</h1>
+    </header>
 
-<div class="profile-container">
-    <h1>@ViewData["Title"]</h1>
-    <hr />
-
-    <form asp-action="EditProfile" method="post">
+    @* Слагаме формата в основната част на грида *@
+    <form asp-action="EditProfile" method="post" class="edit-profile-main-content">
         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
+        @* Скрито поле за UserId *@
         <input type="hidden" asp-for="UserId" />
 
-        <div class="mb-3">
-            <label asp-for="Username" class="form-label"></label>
-            <input asp-for="Username" class="form-control" readonly />
+        <div class="form-group-grid">
+            <label asp-for="Username"></label>
+            <input asp-for="Username" class="form-control-grid readonly" readonly />
         </div>
-
-        <div class="mb-3">
-            <label asp-for="Name" class="form-label"></label>
-            <input asp-for="Name" class="form-control" />
+        <div class="form-group-grid">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control-grid" />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
-        <div class="mb-3">
-            <label asp-for="Email" class="form-label"></label>
-            <input asp-for="Email" class="form-control" readonly />
+        <div class="form-group-grid">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control-grid readonly" readonly />
         </div>
 
-
-        <div class="profile-actions mt-4">
-            <a asp-action="Profile" class="btn btn-secondary">Cancel</a>
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-        </div>
     </form>
+
+    <footer class="profile-actions-grid">
+        <a asp-action="Profile" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary" form="edit-profile-main-content">Save Changes</button>
+    </footer>
+
 </div>
 
 @section Scripts {
