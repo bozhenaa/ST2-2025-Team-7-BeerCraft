@@ -30,5 +30,20 @@ namespace BeerCraftMVC.Repositories
             return await _context.Users
                 .FirstOrDefaultAsync(u => u.Username == username);
         }
+
+        public async Task<User> GetByIdAsync(int id)
+        {
+            return await _context.Users
+         .Include(u => u.Inventory) 
+             .ThenInclude(inv => inv.Ingredient)
+         .AsNoTracking() 
+         .FirstOrDefaultAsync(u => u.Id == id); 
+        }
+
+        public async Task UpdateAsync(User user)
+        {
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+        }
     }
 }

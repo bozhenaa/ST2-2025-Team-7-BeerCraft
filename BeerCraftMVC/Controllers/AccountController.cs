@@ -1,9 +1,13 @@
 ﻿using BeerCraftMVC.Models.Entities;
 using BeerCraftMVC.Models.ViewModels.Account;
+using BeerCraftMVC.Models.ViewModels.Inventory;
+using BeerCraftMVC.Models.ViewModels.Profile;
 using BeerCraftMVC.Repositories;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Eventing.Reader;
 using System.Security.Claims;
 
@@ -170,5 +174,113 @@ namespace BeerCraftMVC.Controllers
               new ClaimsPrincipal(claimsIdentity),
               authProperties);
         }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Profile()
+        {
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier); //взима ID-то на вписания потребител от claims
+            if(string.IsNullOrEmpty(userIdString)|| !int.TryParse(userIdString, out int userId))
+            {
+                
+                return RedirectToAction("Access", "Account");
+            }
+                var user = await _userRepository.GetByIdAsync(userId);
+                if (user == null)
+                {
+                    await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                    return RedirectToAction("Access", "Account");
+                }
+            var viewModel = new ProfileViewModel
+            {
+                UserId = user.Id,
+                Username = user.Username,
+                Name = user.Name,
+                Email = user.Email,
+                CreatedAt = user.CreatedAt,
+                InventoryItems = user.Inventory 
+         .OrderBy(inv => inv.Ingredient.Name) 
+         .Select(inv => new InventoryItemViewModel
+         {
+             IngredientId = inv.IngredientId,
+             IngredientName = inv.Ingredient.Name, 
+             Quantity = inv.Quantity
+         }).ToList()
+            };
+            return View(viewModel);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> EditProfile()
+        {
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userIdString, out int userId))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new EditProfileViewModel
+            {
+                UserId = user.Id,
+                Username = user.Username, 
+                Name = user.Name,      
+                Email = user.Email      
+            };
+
+            return View(viewModel); 
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditProfile(EditProfileViewModel viewModel)
+        {
+            // Проверяваме дали ID-то от формата съвпада с логнатия потребител (за сигурност)
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userIdString, out int currentUserId) || viewModel.UserId != currentUserId)
+            {
+                return Forbid(); // Не позволяваме редакция на чужд профил
+            }
+
+            if (ModelState.IsValid)
+            {
+                //Вземаме User Entity от базата
+                var userToUpdate = await _userRepository.GetByIdAsync(viewModel.UserId);
+                if (userToUpdate == null)
+                {
+                    return NotFound();
+                }
+                userToUpdate.Name = viewModel.Name;
+
+                try
+                {
+                    await _userRepository.UpdateAsync(userToUpdate);
+                    TempData["SuccessMessage"] = "Profile updated successfully!";
+                    return RedirectToAction("Profile"); 
+                }
+                catch (DbUpdateConcurrencyException) 
+                {
+                  
+                    ModelState.AddModelError("", "Unable to save changes. " +
+                        "Try again, and if the problem persists, see your system administrator.");
+                }
+            }
+
+          
+            viewModel.Username = User.Identity.Name;
+            var originalUser = await _userRepository.GetByIdAsync(viewModel.UserId);
+            if (originalUser != null) viewModel.Email = originalUser.Email;
+
+
+            return View(viewModel); 
+        }
+
     }
 }

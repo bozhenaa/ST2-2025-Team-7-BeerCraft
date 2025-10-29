@@ -35,7 +35,7 @@
 
                     @if (User.Identity != null && User.Identity.IsAuthenticated)
                     {
-                        <a asp-controller="Recipe" asp-action="Index" class="btn btn-secondary">Explore</a>
+                        <li><a asp-controller="Recipe" asp-action="Index">Explore</a></li>
                     }
                     else
                     {

@@ -1,0 +1,51 @@
+﻿.profile-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: var(--stripe-color, #fff);
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+    .profile-container h1 {
+        color: var(--text-color);
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+.profile-details dt {
+    font-weight: 700;
+    color: var(--accent-color);
+    text-align: right;
+    padding-right: 1rem;
+}
+
+.profile-details dd {
+    margin-bottom: 0.8rem;
+    color: var(--text-color);
+}
+
+.profile-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    border-top: 1px solid rgba(var(--text-color-rgb, 51, 46, 44), 0.1);
+    padding-top: 1.5rem;
+    margin-top: 1.5rem !important;
+}
+
+    .profile-actions form {
+        display: inline;
+    }
+
+    .profile-actions .btn-secondary {
+        background-color: transparent;
+        border-color: var(--text-color);
+        color: var(--text-color);
+    }
+
+        .profile-actions .btn-secondary:hover {
+            background-color: var(--text-color);
+            color: var(--stripe-color);
+        }
+

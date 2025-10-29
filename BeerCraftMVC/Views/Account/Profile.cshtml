@@ -1,1 +1,68 @@
-﻿
+﻿@model BeerCraftMVC.Models.ViewModels.Profile.ProfileViewModel
+@{
+    ViewData["Title"] = "Your Profile";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/profile.css" /> 
+    <link rel="stylesheet" href="~/css/second_layout.css"/>
+}
+
+<div class="profile-container">
+    <h1>@ViewData["Title"]</h1>
+    <hr />
+
+    <div class="profile-details">
+        <dl class="row">
+            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Username)</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.Username)</dd>
+
+            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Name)</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.Name)</dd>
+
+            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Email)</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.Email)</dd>
+
+            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.CreatedAt)</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.CreatedAt)</dd>
+        </dl>
+    </div>
+    <hr /> @* Разделител *@
+    <h4 class="mt-4">@Html.DisplayNameFor(model => model.InventoryItems)</h4>
+
+@if (Model.InventoryItems.Any())
+{
+        <table class="table table-sm table-hover inventory-table mt-3">
+            <thead>
+                <tr>
+                    <th>Ingredient</th>
+                    <th class="text-end">Quantity</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.InventoryItems)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.IngredientName)</td>
+                        <td class="text-end">@Html.DisplayFor(modelItem => item.Quantity)</td>
+                        @* <td>
+                        <a asp-controller="Inventory" asp-action="Edit" asp-route-id="@item.IngredientId" class="btn btn-sm btn-outline-primary">Edit</a>
+                    </td> *@
+                    </tr>
+                }
+            </tbody>
+        </table>
+}
+else
+{
+        <p>Your inventory is empty.</p>
+}
+    <div class="profile-actions mt-4">
+    <div class="profile-actions mt-4">
+        <a asp-action="EditProfile" asp-route-id="@Model.UserId" class="btn btn-primary">Edit Profile</a> 
+        <form asp-controller="" asp-action="" method="post">
+            <button type="submit" class="btn btn-secondary">Update inventory</button>
+        </form>
+    </div>
+
+</div>

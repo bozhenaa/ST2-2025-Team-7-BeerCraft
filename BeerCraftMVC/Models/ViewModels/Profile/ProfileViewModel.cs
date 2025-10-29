@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BeerCraftMVC.Models.ViewModels.Inventory;
+using System.ComponentModel.DataAnnotations;
 
 namespace BeerCraftMVC.Models.ViewModels.Profile
 {
@@ -18,5 +19,8 @@ namespace BeerCraftMVC.Models.ViewModels.Profile
         [Display(Name = "Member Since")]
         [DataType(DataType.Date)] 
         public DateTime CreatedAt { get; set; }
+
+        [Display(Name = "My Inventory")]
+        public List<InventoryItemViewModel> InventoryItems { get; set; } = new List<InventoryItemViewModel>();
     }
 }
