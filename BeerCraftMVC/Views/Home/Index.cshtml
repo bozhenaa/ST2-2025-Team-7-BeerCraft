@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["BodyClass"] = "home-page";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/home.css" />
+}
+
+
+    <div class="hero-section">
+
+        <main class="page-main">
+            <h1>THE ULTIMATE TOOLKIT FOR YOUR PERFECT BREW.</h1>
+            <p>From creating recipes to following the brewing proccess, BeerCraft has everything you need for the perfect brew!</p>
+
+            <div class="cta-buttons">
+                <a  asp-controller="" asp-action="" class="btn btn-primary">Explore recipes</a>
+
+            @if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="Recipe" asp-action="Index" class="btn btn-secondary">Start new brew</a>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="Access" asp-route-panel="login" class="btn btn-secondary">Start new brew</a>
+            }
+
+
+            </div>
+        </main>
+
+        <aside class="page-sidebar">
+            <div class="image-container">
+            </div>
+        </aside>
+
+    </div>

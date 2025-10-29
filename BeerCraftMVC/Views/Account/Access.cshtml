@@ -1,0 +1,70 @@
+﻿@model BeerCraftMVC.Models.ViewModels.LoginRegisterViewModel
+@{
+    ViewData["Title"] = "Login/Register";
+    // Тази C# променлива решава кой панел да се покаже
+    bool showRegister = (ViewBag.ActivePanel == "register");
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/account.css" /> 
+}
+
+<div class="account-body">
+    <div class="container" id="container">
+
+        <div class="form-container sign-in-container @(showRegister ? "hidden-window" : "")">
+            <form asp-action="Login" asp-route-returnurl="@ViewBag.ReturnUrl" method="post">
+                <h1>Log in your profile</h1>
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <div class="form-group">
+                    <input asp-for="Login.Username" placeholder="Username" />
+                </div>
+                <div class="form-group">
+                    <input asp-for="Login.Password" placeholder="Password" type="password" />
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+        </div>
+        <div class="form-container sign-up-container @(showRegister ? "" : "hidden-window")">
+            <form asp-action="Register" method="post">
+                <h1>Create account</h1>
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <div class="form-group">
+                    <input asp-for="Register.Name" placeholder="First and Last Name" />
+                </div>
+                <div class="form-group">
+                    <input asp-for="Register.Username" placeholder="Username" />
+                </div>
+                <div class="form-group">
+                    <input asp-for="Register.Email" placeholder="Email" />
+                </div>
+                <div class="form-group">
+                    <input asp-for="Register.Password" placeholder="Password" type="password" />
+                </div>
+                <div class="form-group">
+                    <input asp-for="Register.ConfirmedPassword" placeholder="Confirm password" type="password" />
+                </div>
+
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+        </div>
+
+        <div class="welcome-sign @(showRegister ? "hidden-window" : "")">
+            <h2>Welcome back!</h2>
+            <a asp-action="Access" asp-route-panel="register">Click here if you do not have an account</a>
+        </div>
+
+        <div class="welcome-sign @(showRegister ? "" : "hidden-window")">
+            <h2>Welcome!</h2>
+            <a asp-action="Access" asp-route-panel="login">Already have an account? Login</a>
+        </div>
+
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

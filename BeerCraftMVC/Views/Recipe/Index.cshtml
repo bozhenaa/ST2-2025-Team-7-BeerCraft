@@ -1,0 +1,61 @@
+﻿@model BeerCraftMVC.Models.ViewModels.Recipes.RecipeIndexViewModel
+@{
+    ViewData["Title"] = "Discover Recipes";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/recipes.css" /> 
+}
+
+<div class="recipe-page-container">
+
+    <header class="recipe-page-header">
+        <h1>Discover Recipes</h1>
+        <div class="controls-container">
+            <form asp-controller="Recipe" asp-action="Index" method="get" class="search-form-modern">
+                <input type="text" name="searchTerm" placeholder="Search..." value="@ViewData["CurrentFilter"]" />
+                <button type="submit" aria-label="Search"><i class="fas fa-search"></i></button> @* Икона за търсене (добави FontAwesome) *@
+                @if (!string.IsNullOrEmpty((string?)ViewData["CurrentFilter"]))
+                {
+                    <a asp-action="Index" class="clear-search" aria-label="Clear search">&times;</a>
+                }
+            </form>
+            <a asp-controller="Recipe" asp-action="Create" class="btn btn-create-new">
+                <i class="fas fa-plus"></i> New Recipe 
+            </a>
+        </div>
+    </header>
+
+    @if (Model.Recipes.Any())
+    {
+        <section class="recipe-modern-grid">
+            @foreach (var item in Model.Recipes)
+            {
+                <article class="recipe-modern-card">
+                    <a asp-action="Details" asp-route-id="@item.Id" class="card-link-overlay" aria-label="View details for @item.Name"></a>
+                    <div class="card-content">
+                        <h3>@item.Name</h3>
+                        <p class="card-description">
+                            @(item.Description != null && item.Description.Length > 120 ? item.Description.Substring(0, 120) + "..." : item.Description)
+                        </p>
+                    </div>
+                    <footer class="card-footer">
+                        <span class="author">@* @item.AuthorUsername *@</span>
+                        <time datetime="@item.CreatedAt.ToString("yyyy-MM-dd")">@item.CreatedAt.ToString("MMM dd, yyyy")</time>
+                    </footer>
+                </article>
+            }
+        </section>
+    }
+    else
+    {
+        <p class="no-recipes-found-modern">
+            No recipes found. Ready to create the first one?
+            <a asp-action="Create">Add Recipe</a>
+        </p>
+    }
+
+</div>
+
+@section Scripts {
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit-code.js" crossorigin="anonymous"></script> @* Замени с твоя код *@
+}

@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BeerCraft</title>
+
+    <link rel="icon" href="~/beercfraft.png" type="image/png"/>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="~/css/layout.css" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body class="@ViewData["BodyClass"]">
+
+    <header class="page-header">
+        <a href="/" class="logo"> BEERCRAFT</a>
+        <div class="navigation">
+            @if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                <p>Welcome back, @User.Identity.Name!</p>
+            }
+            else
+            {
+                <p>Your guide to the journey of beer brewing.</p>
+            }
+
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a> </li>
+
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <li><a asp-action="Index" asp-controller="Recipes">Explore</a></li>
+                    }
+                    else
+                    {
+                        <li><a asp-action="Access" asp-controller="Account">Explore</a></li>
+                    }
+
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <li><a asp-action="Index" asp-controller="Recipes">Calculator</a></li>
+                    }
+                    else
+                    {
+                        <li><a asp-action="Access" asp-controller="Account">Calculator</a></li>
+                    }
+
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <li><a asp-action="Profile" asp-controller="Account">Profile</a></li>
+                        <li>
+                            <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                                <button type="submit" class="nav-link-button">Logout</button>
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li><a asp-action="Access" asp-controller="Account">Login/Register</a></li>
+                    }
+
+                   
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="checker-divider"></div>
+    <main role="main">
+        @RenderBody()
+    </main>
+
+
+    <footer class="page-footer">
+        <p> &copy; 2025 BeerCraft by Bozhena Bakardzhieva</p>
+    </footer>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
