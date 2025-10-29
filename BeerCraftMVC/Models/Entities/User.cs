@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BeerCraftMVC.Models
+namespace BeerCraftMVC.Models.Entities
 {
     /// <summary>
     /// DTO for User Profile

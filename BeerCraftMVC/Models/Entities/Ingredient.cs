@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BeerCraftMVC.Models
+namespace BeerCraftMVC.Models.Entities
 {
     /// <summary>
     /// съставка от видовете (Pale Malt, Crystal Malt, Cascade Hops, Ale Yeast и т.н.)

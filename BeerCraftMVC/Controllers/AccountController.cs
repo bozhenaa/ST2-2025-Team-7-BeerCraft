@@ -1,5 +1,5 @@
-﻿using BeerCraftMVC.Models;
-using BeerCraftMVC.Models.ViewModels;
+﻿using BeerCraftMVC.Models.Entities;
+using BeerCraftMVC.Models.ViewModels.Account;
 using BeerCraftMVC.Repositories;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;

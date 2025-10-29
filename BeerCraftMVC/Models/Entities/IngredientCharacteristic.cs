@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BeerCraftMVC.Models
+namespace BeerCraftMVC.Models.Entities
 {
     /// <summary>
     /// свързваща таблица за съставка и характеристиките ѝ 

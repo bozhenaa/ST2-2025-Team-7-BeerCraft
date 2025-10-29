@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BeerCraftMVC.Models
+namespace BeerCraftMVC.Models.Entities
 {
     /// <summary>
     /// характеристика за всяка съставка (цвят, горчивина, наситеност и т.н.) 

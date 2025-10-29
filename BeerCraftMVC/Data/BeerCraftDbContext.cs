@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using BeerCraftMVC.Models;
+using BeerCraftMVC.Models.Entities;
 
 namespace BeerCraftMVC.Data
 {

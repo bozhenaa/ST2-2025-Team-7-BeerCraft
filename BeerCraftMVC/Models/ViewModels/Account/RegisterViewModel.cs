@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BeerCraftMVC.Models.ViewModels
+namespace BeerCraftMVC.Models.ViewModels.Account
 {
     public class RegisterViewModel
     {
