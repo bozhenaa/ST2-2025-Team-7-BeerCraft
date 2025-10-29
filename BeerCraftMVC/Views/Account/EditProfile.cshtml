@@ -3,19 +3,17 @@
     ViewData["Title"] = "Edit Profile";
 }
 @section Styles {
-    <link rel="stylesheet" href="~/css/profile.css" /> 
+    <link rel="stylesheet" href="~/css/edit-profile.css" /> 
     <link rel="stylesheet" href="~/css/second_layout.css"/>
 }
-<div class="profile-grid-container edit-profile-form"> @* Добавен е допълнителен клас за специфични стилове, ако трябват *@
+<div class="profile-grid-container edit-profile-form"> 
     <header class="profile-header">
         <h1>@ViewData["Title"]</h1>
     </header>
 
-    @* Слагаме формата в основната част на грида *@
     <form asp-action="EditProfile" method="post" class="edit-profile-main-content">
         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-        @* Скрито поле за UserId *@
         <input type="hidden" asp-for="UserId" />
 
         <div class="form-group-grid">

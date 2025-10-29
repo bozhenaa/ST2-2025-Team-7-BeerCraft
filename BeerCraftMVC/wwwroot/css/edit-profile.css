@@ -1,0 +1,116 @@
+﻿.profile-grid-container.edit-profile-form {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column layout for the form */
+    grid-template-rows: auto 1fr auto; /* Header, Form Content, Footer */
+    gap: 1.5rem;
+    max-width: 700px; /* Adjust max-width for form */
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: var(--stripe-color, #fff);
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.09);
+}
+
+.profile-header {
+    grid-column: 1 / -1;
+    text-align: center;
+    border-bottom: 1px solid rgba(var(--text-color-rgb, 51, 46, 44), 0.1);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+    .profile-header h1 {
+        font-family: var(--font-heading);
+        color: var(--text-color);
+        margin: 0;
+        letter-spacing: 0.05em;
+        font-size: 2rem; /* Slightly smaller title for edit form */
+    }
+
+.edit-profile-main-content {
+    grid-column: 1 / -1;
+    padding: 0; /* Remove extra padding if container has it */
+}
+
+.form-group-grid {
+    margin-bottom: 1.5rem;
+}
+
+    .form-group-grid label {
+        display: block;
+        font-weight: 700;
+        color: var(--accent-color);
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+    }
+
+.form-control-grid {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid rgba(var(--text-color-rgb, 51, 46, 44), 0.2);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: var(--font-body);
+    color: var(--text-color);
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .form-control-grid:focus {
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 3px rgba(var(--accent-color-rgb, 180, 122, 59), 0.2);
+        outline: none;
+    }
+
+    .form-control-grid.readonly {
+        background-color: #e9ecef;
+        cursor: not-allowed;
+        border-color: rgba(var(--text-color-rgb, 51, 46, 44), 0.1);
+    }
+
+.form-group-grid .text-danger {
+    display: block;
+    color: #D9534F;
+    font-size: 0.85rem;
+    margin-top: 0.3rem;
+}
+
+.profile-actions-grid {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    border-top: 1px solid rgba(var(--text-color-rgb, 51, 46, 44), 0.1);
+    padding-top: 1.5rem;
+    margin-top: 1rem;
+}
+
+    .profile-actions-grid .btn {
+        padding: 0.6em 1.5em; /* Slightly larger padding than profile view */
+        font-size: 0.9rem;
+        border-radius: 25px;
+    }
+
+    .profile-actions-grid form {
+        display: inline;
+    }
+
+    .profile-actions-grid .btn-secondary {
+        background-color: transparent;
+        border-color: var(--text-color);
+        color: var(--text-color);
+    }
+
+        .profile-actions-grid .btn-secondary:hover {
+            background-color: var(--text-color);
+            color: var(--stripe-color);
+        }
+
+    .profile-actions-grid .btn-primary {
+        /* Assuming styles come from layout.css */
+    }
+
+        .profile-actions-grid .btn-primary:hover {
+            /* Assuming styles come from layout.css */
+        }

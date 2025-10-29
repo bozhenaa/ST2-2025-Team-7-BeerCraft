@@ -13,7 +13,7 @@ namespace BeerCraftMVC.Models.ViewModels.Recipes
         public List<RecipeIngredientInputModel> Ingredients { get; set; } = new List<RecipeIngredientInputModel>();
         public SelectList AvailableIngredients { get; set; }
 
-        public SelectList AvailableIngredientTypes { get; set; }
+        public SelectList AvailableIngredientTypes { get; set; } = new SelectList(new List<string> { });
         public SelectList AvailableUnits { get; set; } = new SelectList(new List<string> { "g", "kg", "ml", "l", "oz", "lb" });
 
         public AddRecipeViewModel()
