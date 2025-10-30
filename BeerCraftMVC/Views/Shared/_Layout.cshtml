@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BeerCraft</title>
 
-    <link rel="icon" href="~/beercfraft.png" type="image/png"/>
+    <link rel="icon" href="~/beercfraft.png" type="image/png" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,29 +33,33 @@
 
             <nav>
                 <ul>
-                    <li><a href="/">Home</a> </li>
-
-                    @if (User.Identity != null && User.Identity.IsAuthenticated)
-                    {
-                        <li><a asp-controller="Recipe" asp-action="Index">Explore</a></li>
-                    }
-                    else
-                    {
-                        <li><a asp-action="Access" asp-controller="Account">Explore</a></li>
-                    }
-
-                    @if (User.Identity != null && User.Identity.IsAuthenticated)
-                    {
-                        <li><a asp-action="Index" asp-controller="Recipes">Calculator</a></li>
-                    }
-                    else
-                    {
-                        <li><a asp-action="Access" asp-controller="Account">Calculator</a></li>
-                    }
-
-                    @if (User.Identity != null && User.Identity.IsAuthenticated)
-                    {
-                        <li><a asp-action="Profile" asp-controller="Account">Profile</a></li>
+                    <li id="homeNav"><a href="/">Home</a> </li>
+                    <li id="exploreNav">
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <a asp-controller="Recipe" asp-action="Index">Explore</a>
+                        }
+                        else
+                        {
+                            <a asp-action="Access" asp-controller="Account">Explore</a>
+                        }
+                    </li>
+                    <li id="calculatorId">
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <a asp-action="Index" asp-controller="Recipes">Calculator</a>
+                        }
+                        else
+                        {
+                            <a asp-action="Access" asp-controller="Account">Calculator</a>
+                        }
+                    </li>
+              
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                        <li id="profileNav">
+                            <a asp-action="Profile" asp-controller="Account">Profile</a>
+                        </li>
                         <li>
                             <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
                                 <button type="submit" class="nav-link-button">Logout</button>
@@ -64,10 +68,13 @@
                     }
                     else
                     {
-                        <li><a asp-action="Access" asp-controller="Account">Login/Register</a></li>
+                        <li>
+                        <a asp-action="Access" asp-controller="Account">Login/Register</a>
+                        </li>
                     }
 
-                   
+
+
                 </ul>
             </nav>
         </div>

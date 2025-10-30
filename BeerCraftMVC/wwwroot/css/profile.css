@@ -1,4 +1,10 @@
-﻿.profile-grid-container {
+﻿#profileNav a {
+    color: var(--current-page);
+}
+#profileNav a:hover{
+    color:var(--stripe-color);
+}
+.profile-grid-container {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows: auto auto auto;

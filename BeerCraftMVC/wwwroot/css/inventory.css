@@ -1,4 +1,11 @@
-﻿.inventory-container {
+﻿#profileNav a {
+    color: var(--current-page);
+}
+
+    #profileNav a:hover {
+        color: var(--stripe-color);
+    }
+.inventory-container {
     max-width: 1000px;
     margin: 2rem auto;
     padding: 2rem;

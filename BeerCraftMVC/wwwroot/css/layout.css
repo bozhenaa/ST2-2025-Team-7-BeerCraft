@@ -10,6 +10,7 @@
     --font-headingS: 'Anton', sans-serif;
     --font-body: 'Montserrat', sans-serif;
     --font-heading: 'Oswald', sans-serif;
+    --current-page: rgb(151, 44, 44);
 }
 
 .home-page body {

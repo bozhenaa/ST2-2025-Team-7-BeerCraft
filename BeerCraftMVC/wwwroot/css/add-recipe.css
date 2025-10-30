@@ -1,4 +1,12 @@
-﻿h1 {
+﻿#exploreNav a {
+    color: var(--current-page);
+}
+
+#exploreNav a:hover {
+    color: var(--stripe-color);
+}
+
+h1 {
     font-family: var(--font-heading);
     color: var(--text-color);
     text-align: center;
