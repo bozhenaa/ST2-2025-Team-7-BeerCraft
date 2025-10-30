@@ -19,10 +19,26 @@
 
                 <div class="form-group-inv">
                     <label asp-for="AddForm.IngredientId"></label>
-                    <select asp-for="AddForm.IngredientId" asp-items="Model.AddForm.AvailableIngredients" class="form-select-inv">
+                    <select asp-for="AddForm.IngredientId" asp-items="Model.AddForm.AvailableIngredients" class="form-select-inv" id="ingredientSelect">
                         <option value="">-- Select Ingredient --</option>
+                        <option value="-1">--Add New Ingredient--</option>
                     </select>
                     <span asp-validation-for="AddForm.IngredientId" class="text-danger"></span>
+                </div>
+
+                <div id="newIngredientFields" style="display:none; margin-left:1px;border-left: 2px solid var(--accent-color); padding-left: 1rem;">
+                    <div class="form-group-inv">
+                        <label asp-for="AddForm.NewIngredientName"></label>
+                        <input asp-for="AddForm.NewIngredientName" class="form-control-inv" type="text" placeholder="e.g., Orange Peels.."/>
+                        <span asp-validation-for="AddForm.NewIngredientName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group-inv">
+                        <label asp-for="AddForm.NewIngredientTypeId"></label>
+                        <select asp-for="AddForm.NewIngredientTypeId" asp-items="Model.AvailableIngredientTypes" class="form-select-inv">
+                            <option value="">-- Select Ingredient Type--</option>
+                        </select>
+                        <span asp-validation-for="AddForm.NewIngredientTypeId" class="text-danger"></span>
+                    </div>
                 </div>
 
                 <div class="form-group-inv">
@@ -73,4 +89,25 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const select = document.getElementById('ingredientSelect');
+            const newFields = document.getElementById('newIngredientFields');
+            const newNameInput = newFields.querySelector('input[name*="NewIngredientName"]');
+            const newTypeSelect = newFields.querySelector('select[name*="NewIngredientTypeId"]');
+
+            function toggleFields() {
+                if (select.value === '-1') {
+                    newFields.style.display = 'block';
+                } else {
+                    newFields.style.display = 'none';
+                    if (newNameInput) newNameInput.value = '';
+                    if (newTypeSelect) newTypeSelect.value = '';
+                }
+            }
+
+            select.addEventListener('change', toggleFields);
+            toggleFields();
+        });
+    </script>
 }

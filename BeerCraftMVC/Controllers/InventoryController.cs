@@ -28,6 +28,16 @@ namespace BeerCraftMVC.Controllers
             return userId;
         }
 
+        private async Task<SelectList> GetIngredientTypesSelctListAsync()
+        {
+            var types = await _context.IngredientTypes
+                .OrderBy(t => t.Name)
+                .Select(t => new { t.Id, t.Name })
+                .AsNoTracking()
+                .ToListAsync();
+            return new SelectList(types, "Id", "Name");
+        }
+
         public async Task<SelectList> GetIngredientsListAsync()
         {
             var ingredients = await _context.Ingredients
@@ -55,7 +65,8 @@ namespace BeerCraftMVC.Controllers
                 AddForm = new AddItemViewModel
                 {
                     AvailableIngredients = await GetIngredientsListAsync()
-                }
+                },
+                AvailableIngredientTypes = await GetIngredientTypesSelctListAsync()
             };
             return View(viewModel);
         }
@@ -66,16 +77,53 @@ namespace BeerCraftMVC.Controllers
         {
             var userId = GetUser();
             var addForm = model.AddForm;
-            if(ModelState.IsValid)
+            if (addForm.IngredientId == -1)
             {
-                var newItem = new Inventory
+                if (string.IsNullOrWhiteSpace(addForm.NewIngredientName))
+                {
+                    ModelState.AddModelError("AddForm.NewIngredientName", "New ingredient name is required.");
+                }
+                if (!addForm.NewIngredientTypeId.HasValue || addForm.NewIngredientTypeId.Value <= 0)
+                {
+                    ModelState.AddModelError("AddForm.NewIngredientTypeId", "Ingredient type is required.");
+                }
+            }
+            if (ModelState.IsValid)
+            {
+                int finalIngredientId;
+                if (addForm.IngredientId == -1)
+                {
+                    var existingIngredient = await _context.Ingredients
+                        .FirstOrDefaultAsync(i => i.Name.ToLower() == addForm.NewIngredientName.Trim().ToLower());
+                    if (existingIngredient != null)
+                    {
+                        finalIngredientId = existingIngredient.Id;
+                    }
+
+                    else
+                    {
+                        var newIngredient = new Ingredient
+                        {
+                            Name = addForm.NewIngredientName.Trim(),
+                            IngredientTypeId = addForm.NewIngredientTypeId.Value
+                        };
+                        _context.Ingredients.Add(newIngredient);
+                        await _context.SaveChangesAsync();
+                        finalIngredientId = newIngredient.Id;
+                    }
+                }
+                else
+                {
+                    finalIngredientId = addForm.IngredientId;
+                }
+                var inventoryItem = new Inventory
                 {
                     UserId = userId,
-                    IngredientId = addForm.IngredientId,
+                    IngredientId = finalIngredientId,
                     Quantity = addForm.Quantity,
                     BoughtAt = DateTime.UtcNow
                 };
-                await _inventoryRepository.AddInventoryItemAsync(newItem);
+                await _inventoryRepository.AddInventoryItemAsync(inventoryItem);
                 return RedirectToAction(nameof(Index));
             }
             var items = await _inventoryRepository.GetUserInventoryItemsAsync(userId);
@@ -87,17 +135,19 @@ namespace BeerCraftMVC.Controllers
                     IngredientName = i.Ingredient.Name,
                     Quantity = i.Quantity
                 }).ToList(),
-                AddForm = addForm
+                AddForm = addForm,
+                AvailableIngredientTypes = await GetIngredientTypesSelctListAsync()
             };
             viewModel.AddForm.AvailableIngredients = await GetIngredientsListAsync();
             return View("Index", viewModel);
+
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult>Delete (int ingredientId)
+        public async Task<IActionResult> Delete(int ingredientId)
         {
             var userId = GetUser();
-            if(userId==0) return Unauthorized();
+            if (userId == 0) return Unauthorized();
             await _inventoryRepository.DeleteAync(userId, ingredientId);
             return RedirectToAction(nameof(Index));
         }
