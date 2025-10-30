@@ -15,7 +15,7 @@
         <div class="cta-buttons">
             @if (User.Identity != null && User.Identity.IsAuthenticated)
             {
-                <a asp-controller="Account" asp-action="Inventory" class="btn btn-primary">Upgrade inventory</a>
+                <a asp-controller="Inventory" asp-action="Index" class="btn btn-primary">Upgrade inventory</a>
                 <a asp-controller="Recipe" asp-action="Index" class="btn btn-secondary">Explore recipes</a>
             }
 

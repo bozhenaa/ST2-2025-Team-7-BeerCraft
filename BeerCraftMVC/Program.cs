@@ -10,6 +10,7 @@ builder.Services.AddDbContext<BeerCraftMVC.Data.BeerCraftDbContext>(options =>
     options.UseSqlite(connectionString));
 builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 
 //настройка на cookie authentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

@@ -50,7 +50,5 @@
 
     <footer class="profile-actions-grid">
         <a asp-action="EditProfile" asp-route-id="@Model.UserId" class="btn btn-primary">Edit Profile</a>
-        <form asp-controller="Account" asp-action="Logout" method="post">
-            <button type="submit" class="btn btn-secondary">Logout</button>
-        </form>
+        <a asp-controller="Inventory" asp-action="Index" asp-route-id="@Model.UserId" class="btn btn-primary">Edit Inventory</a>
     </footer>
