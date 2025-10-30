@@ -6,31 +6,32 @@
 }
 
 
-    <div class="hero-section">
+<div class="hero-section">
 
-        <main class="page-main">
-            <h1>THE ULTIMATE TOOLKIT FOR YOUR PERFECT BREW.</h1>
-            <p>From creating recipes to following the brewing proccess, BeerCraft has everything you need for the perfect brew!</p>
+    <main class="page-main">
+        <h1>THE ULTIMATE TOOLKIT FOR YOUR PERFECT BREW.</h1>
+        <p>From creating recipes to following the brewing proccess, BeerCraft has everything you need for the perfect brew!</p>
 
-            <div class="cta-buttons">
-                <a  asp-controller="" asp-action="" class="btn btn-primary">Upgrade inventory</a>
-
+        <div class="cta-buttons">
             @if (User.Identity != null && User.Identity.IsAuthenticated)
             {
+                <a asp-controller="Account" asp-action="Inventory" class="btn btn-primary">Upgrade inventory</a>
                 <a asp-controller="Recipe" asp-action="Index" class="btn btn-secondary">Explore recipes</a>
             }
+
             else
             {
+                <a asp-controller="Account" asp-action="Access" class="btn btn-primary">Upgrade inventory</a>
                 <a asp-controller="Account" asp-action="Access" asp-route-panel="login" class="btn btn-secondary">Explore recipes</a>
             }
 
 
-            </div>
-        </main>
+        </div>
+    </main>
 
-        <aside class="page-sidebar">
-            <div class="image-container">
-            </div>
-        </aside>
+    <aside class="page-sidebar">
+        <div class="image-container">
+        </div>
+    </aside>
 
-    </div>
+</div>

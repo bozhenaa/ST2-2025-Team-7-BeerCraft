@@ -207,34 +207,8 @@ namespace BeerCraftMVC.Controllers
              Quantity = inv.Quantity
          }).ToList()
             };
+            //попълва информацията за потребителя и неговия инвентар
             return View(viewModel);
-        }
-
-        [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> EditProfile()
-        {
-            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!int.TryParse(userIdString, out int userId))
-            {
-                return Unauthorized();
-            }
-
-            var user = await _userRepository.GetByIdAsync(userId);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            var viewModel = new EditProfileViewModel
-            {
-                UserId = user.Id,
-                Username = user.Username, 
-                Name = user.Name,      
-                Email = user.Email      
-            };
-
-            return View(viewModel); 
         }
 
         [Authorize]
@@ -242,16 +216,16 @@ namespace BeerCraftMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProfile(EditProfileViewModel viewModel)
         {
-            // Проверяваме дали ID-то от формата съвпада с логнатия потребител (за сигурност)
+            // Проверяваме дали ID-то от формата съвпада с логнатия потребител 
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!int.TryParse(userIdString, out int currentUserId) || viewModel.UserId != currentUserId)
             {
-                return Forbid(); // Не позволяваме редакция на чужд профил
+                return Forbid(); 
             }
 
             if (ModelState.IsValid)
             {
-                //Вземаме User Entity от базата
+                
                 var userToUpdate = await _userRepository.GetByIdAsync(viewModel.UserId);
                 if (userToUpdate == null)
                 {
@@ -269,7 +243,7 @@ namespace BeerCraftMVC.Controllers
                 {
                   
                     ModelState.AddModelError("", "Unable to save changes. " +
-                        "Try again, and if the problem persists, see your system administrator.");
+                        "Try again, and if the problem persists, see system administrator.");
                 }
             }
 
@@ -281,6 +255,5 @@ namespace BeerCraftMVC.Controllers
 
             return View(viewModel); 
         }
-
     }
 }
