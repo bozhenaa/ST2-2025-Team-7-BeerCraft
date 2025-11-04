@@ -1,4 +1,7 @@
-﻿.profile-container {
+﻿#profileNav a {
+    color: var(--current-page);
+}
+.profile-container {
     max-width: 800px;
     margin: 2rem auto;
     padding: 2rem;

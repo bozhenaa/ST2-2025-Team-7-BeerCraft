@@ -1,0 +1,60 @@
+﻿@*
+   ViewData["Title"] = "AI Recipe Assistant"''
+*@
+@section Styles {
+    <style>
+        .ai-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: var(--stripe-color, #fff);
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .response-box {
+            background-color: rgba(var(--accent-color-rgb, 180, 122, 59), 0.05);
+            border: 1px solid rgba(var(--accent-color-rgb, 180, 122, 59), 0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            min-height: 100px;
+            white-space: pre-wrap; 
+            font-family: monospace;
+        }
+
+        .prompt-echo {
+            font-style: italic;
+            color: #555;
+        }
+    </style>
+}
+<div class="ai-container">
+    <h1>AI Recipe Assistant</h1>
+    <p> Ask for recipe ideas, ingredient substitution, or brewing tips!</p>
+    <form asp-action="GetSuggestion" method="post">
+        @Html.AntiForgeryToken()
+        <div class="mb-3">
+            <label for="prompt" class="form-label">Your prompt here: </label>
+            <textarea class="form-control" name="prompt" id="prompt" rows="4" 
+            placeholder="e.g., Suggest a recipe for a 20L Stout using Pale Malt and Magnum hops..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary"> Get Suggestion</button>
+    </form>
+    @if(TempData["Response"] != null)
+    {
+        <hr class="my-4" />
+        <h3>Response:</h3>
+        @if (TempData["Prompt"] != null)
+        {
+            <p class="prompt-echo">You asked: "@ViewBag.Prompt"</p>
+        }
+        <div class="response-box">
+            @TempData["Response"]
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger mt-3">@TempData["Error"]</div>
+    }
+</div>

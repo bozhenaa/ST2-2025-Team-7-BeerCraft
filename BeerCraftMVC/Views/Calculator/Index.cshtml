@@ -1,0 +1,226 @@
+﻿@model BeerCraftMVC.Models.ViewModels.Calculator.SrmCalculatorViewModel
+@{
+    ViewData["Title"] = "SRM Color Calculator";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/calculator.css" />
+    <link rel="stylesheet" href="~/css/second_layout.css" />
+}
+<div class="calculator-container">
+    <h1>@ViewData["Title"]</h1>
+    <p>Calculated using the Morey formula. Results update live.</p>
+
+    <div class="calculator-wrapper">
+
+        <div class="calculator-form">
+            <form id="srmForm">
+                <div class="mb-3 volume-input">
+                    <label asp-for="BatchVolume" class="form-label"></label>
+                    <input asp-for="BatchVolume" type="number" step="0.1" class="form-control" id="batchVolume" />
+                    <span asp-validation-for="BatchVolume" class="text-danger"></span>
+                </div>
+
+                <hr />
+                
+                <h4>Grains</h4>
+                <div id="grainList">
+                    @for (int i = 0; i < Model.Grains.Count; i++)
+                    {
+                        <div class="grain-row">
+                            <div class="field-group">
+                                <label asp-for="Grains[i].Weight" class="form-label"></label>
+                                <input asp-for="Grains[i].Weight" type="number" step="0.01" class="form-control calc-input" />
+                            </div>
+                            <div class="field-group">
+                                <label asp-for="Grains[i].Lovibond" class="form-label"></label>
+                                <input asp-for="Grains[i].Lovibond" type="number" class="form-control calc-input" />
+                            </div>
+                            <div class="remove-action">
+                                <button type="button" class="btn-remove-grain" style="display: none;">&times;</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+                
+                <button type="button" id="addGrainBtn" class="btn btn-outline-secondary mb-3">
+                    <i class="fas fa-plus"></i> Add Grain
+                </button>
+            </form>
+        </div>
+
+        <div class="calculator-results">
+            <h3 class="result-title">Estimated Color</h3>
+            <div id="colorSwatch">
+                <span id="srmValue">4.0</span>
+                <span class="srm-label">SRM</span>
+            </div>
+            <div id="ebcValue">7.9 EBC</div>
+        </div>
+
+    </div>
+</div>
+
+<div id="grainRowTemplate" class="grain-row" style="display: none;">
+    <div class="field-group">
+        <label class="form-label">Grain Weight (kg)</label>
+        <input type="number" step="0.01" class="form-control calc-input" data-name="Weight" value="1" />
+    </div>
+    <div class="field-group">
+        <label class="form-label">Grain Color (°L)</label>
+        <input type="number" class="form-control calc-input" data-name="Lovibond" value="10" />
+    </div>
+    <div class="remove-action">
+        <button type="button" class="btn-remove-grain">&times;</button>
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+                document.addEventListener('DOMContentLoaded', function () {
+            const grainList = document.getElementById('grainList');
+            const addGrainBtn = document.getElementById('addGrainBtn');
+            const templateRow = document.getElementById('grainRowTemplate');
+            const srmForm = document.getElementById('srmForm');
+
+            const batchVolumeInput = document.getElementById('batchVolume');
+            const colorSwatch = document.getElementById('colorSwatch');
+            const srmValueEl = document.getElementById('srmValue');
+            const ebcValueEl = document.getElementById('ebcValue');
+
+            if (!grainList || !addGrainBtn || !templateRow || !srmForm) {
+                console.error("Calculator HTML elements not found!");
+                return;
+            }
+
+
+            function calculateSrm() {
+                const volumeL = parseFloat(batchVolumeInput.value);
+                if (isNaN(volumeL) || volumeL <= 0) {
+                    return;
+                }
+
+                const volumeGal = volumeL * 0.264172;
+                let mcu = 0;
+
+                const grainRows = grainList.querySelectorAll('.grain-row');
+                grainRows.forEach(row => {
+                    const weightInput = row.querySelector('[data-name="Weight"]');
+                    const lovibondInput = row.querySelector('[data-name="Lovibond"]');
+
+                    if (weightInput && lovibondInput) {
+                        const weightKg = parseFloat(weightInput.value);
+                        const lovibond = parseFloat(lovibondInput.value);
+
+                        if (!isNaN(weightKg) && !isNaN(lovibond) && weightKg > 0 && lovibond > 0) {
+                            const weightLb = weightKg * 2.20462;
+                            mcu += (weightLb * lovibond) / volumeGal;
+                        }
+                    }
+                });
+
+                const srm = (1.4922 * Math.pow(mcu, 0.6859));
+
+                updateColorDisplay(srm);
+            }
+
+            function updateColorDisplay(srm) {
+                if (isNaN(srm)) return;
+
+                const ebc = srm * 1.97;
+                const hexColor = srmToHex(srm);
+
+                srmValueEl.textContent = srm.toFixed(1);
+                ebcValueEl.textContent = ebc.toFixed(1) + " EBC";
+                colorSwatch.style.backgroundColor = hexColor;
+            }
+
+            function srmToHex(srm) {
+                if (srm < 1) return '#ffffff';
+                if (srm > 40) srm = 40;
+
+                const srmColors = [
+                    { srm: 1,  rgb: [255, 255, 204] },
+                    { srm: 2,  rgb: [255, 249, 177] },
+                    { srm: 3,  rgb: [248, 239, 137] },
+                    { srm: 4,  rgb: [240, 225,  97] },
+                    { srm: 5,  rgb: [231, 208,  56] },
+                    { srm: 6,  rgb: [221, 191,  20] },
+                    { srm: 7,  rgb: [211, 173,  10] },
+                    { srm: 8,  rgb: [200, 156,   9] },
+                    { srm: 9,  rgb: [188, 139,   9] },
+                    { srm: 10, rgb: [176, 122,   9] },
+                    { srm: 11, rgb: [164, 107,  10] },
+                    { srm: 12, rgb: [152,  92,  10] },
+                    { srm: 13, rgb: [141,  79,  10] },
+                    { srm: 14, rgb: [129,  67,  10] },
+                    { srm: 15, rgb: [118,  57,  10] },
+                    { srm: 17, rgb: [ 99,  42,  11] },
+                    { srm: 20, rgb: [ 80,  30,  12] },
+                    { srm: 24, rgb: [ 60,  22,  13] },
+                    { srm: 30, rgb: [ 40,  15,  13] },
+                    { srm: 35, rgb: [ 30,  11,  12] },
+                    { srm: 40, rgb: [ 20,   8,   8] }
+                ];
+
+                let lower = srmColors.findLast(c => c.srm <= srm);
+                let upper = srmColors.find(c => c.srm > srm);
+
+                if (!upper) return `rgb(${lower.rgb.join(',')})`;
+
+                const range = upper.srm - lower.srm;
+                const scale = (srm - lower.srm) / range;
+
+                const r = lower.rgb[0] + (upper.rgb[0] - lower.rgb[0]) * scale;
+                const g = lower.rgb[1] + (upper.rgb[1] - lower.rgb[1]) * scale;
+                const b = lower.rgb[2] + (upper.rgb[2] - lower.rgb[2]) * scale;
+
+                return `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`;
+            }
+
+
+            srmForm.addEventListener('input', function (e) {
+                if (e.target && e.target.classList.contains('calc-input') || e.target.id === 'batchVolume') {
+                    calculateSrm();
+                }
+            });
+
+            addGrainBtn.addEventListener('click', function () {
+                const newRow = templateRow.cloneNode(true);
+                newRow.removeAttribute('id');
+                newRow.style.display = 'flex';
+                grainList.appendChild(newRow);
+                updateRemoveButtonsVisibility();
+                calculateSrm(); 
+            });
+
+            grainList.addEventListener('click', function (e) {
+                if (e.target && (e.target.classList.contains('btn-remove-grain') || e.target.closest('.btn-remove-grain'))) {
+                    const rowToRemove = e.target.closest('.grain-row');
+                    if (grainList.children.length > 1) {
+                        rowToRemove.remove();
+                        updateRemoveButtonsVisibility();
+                        calculateSrm(); 
+                    }
+                }
+            });
+
+            function updateRemoveButtonsVisibility() {
+                const rows = grainList.querySelectorAll('.grain-row');
+                const showRemove = rows.length > 1;
+                rows.forEach(row => {
+                    const removeBtn = row.querySelector('.btn-remove-grain');
+                    if (removeBtn) {
+                        removeBtn.style.display = showRemove ? 'inline-block' : 'none';
+                    }
+                });
+            }
+
+            updateRemoveButtonsVisibility();
+            calculateSrm(); 
+        });
+
+    </script>
+}

@@ -14,7 +14,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;700&family=Oswald:wght@500;700&display=swap"
           rel="stylesheet">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" 
+    integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
     <link rel="stylesheet" href="~/css/layout.css" />
+    <link rel="stylesheet" href="~/css/chatbot.css"/>
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body class="@ViewData["BodyClass"]">
@@ -44,16 +50,20 @@
                             <a asp-action="Access" asp-controller="Account">Explore</a>
                         }
                     </li>
-                    @*TODO  
+                    @*
                     <li id="calculatorId">
                         @if (User.Identity != null && User.Identity.IsAuthenticated)
                         {
-                            <a asp-action="Index" asp-controller="Recipes">Calculator</a>
+                            <a asp-action="Index" asp-controller="Calculator">Calculator</a>
                         }
                         else
                         {
                             <a asp-action="Access" asp-controller="Account">Calculator</a>
                         }
+                    </li>
+                    
+                    <li>
+                        <a asp-controller="AI" asp-action="Index">AI Assistant</a>
                     </li>
                     *@
               
@@ -64,17 +74,16 @@
                         </li>
                         <li>
                             <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
-                                <button type="submit" class="nav-link-button">Logout</button>
+                                <button type="submit" class="nav-link-button"><i class="fa fa-sign-out" aria-hidden="true"></i></button>
                             </form>
                         </li>
                     }
                     else
                     {
-                        <li>
+                        <li id="loginNav">
                         <a asp-action="Access" asp-controller="Account">Login/Register</a>
                         </li>
                     }
-
 
 
                 </ul>
@@ -87,10 +96,35 @@
     </main>
 
 
+        
     <footer class="page-footer">
         <p> &copy; 2025 BeerCraft by Bozhena Bakardzhieva</p>
     </footer>
+     @if (User.Identity != null && User.Identity.IsAuthenticated)
+    {
+        <div class="chat-bubble" id="chatBubble">
+            <i class="fas fa-comment-dots"></i>
+        </div>
 
+        <div class="chat-window" id="chatWindow" style="display: none;">
+            <div class="chat-header">
+                <strong>AI Assistant</strong>
+                <button class="btn-close-chat" id="closeChatBtn">&times;</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-message ai">
+                    <span>Hi! How can I help you with your brewing today?</span>
+                </div>
+            </div>
+            <form class="chat-input-form" id="chatForm">
+                <input type="text" id="chatInput" placeholder="Type a message..." autocomplete="off" />
+                <button type="submit" aria-label="Send"><i class="fas fa-paper-plane"></i></button>
+            </form>
+        </div>
+    }
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/chat.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+    
 </html>

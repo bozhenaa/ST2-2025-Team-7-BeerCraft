@@ -2,10 +2,6 @@
     color: var(--current-page);
 }
 
-    #homeNav a:hover {
-        color: var(--stripe-color);
-    }
-
 .hero-section {
     display: grid;
     grid-template-columns: 1fr 1fr;
