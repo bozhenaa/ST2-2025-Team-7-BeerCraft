@@ -5,22 +5,27 @@
 @section Styles {
     <link rel="stylesheet" href="~/css/recipes.css" /> 
 }
-
 <div class="recipe-page-container">
 
     <header class="recipe-page-header">
         <h1>Discover Recipes</h1>
         <div class="controls-container">
-            <form asp-controller="Recipe" asp-action="Index" method="get" class="search-form-modern">
-                <input type="text" name="searchTerm" placeholder="Search..." value="@ViewData["CurrentFilter"]" />
-                <button type="submit" aria-label="Search"><i class="fas fa-search"></i></button> @* Икона за търсене (добави FontAwesome) *@
+            <form asp-controller="Recipe" asp-action="Index" method="get" class="search-form-modern" autocomplete="off">
+                <input type="text"
+                       name="searchTerm"
+                       placeholder="Search..."
+                       value="@ViewData["CurrentFilter"]"
+                       id="recipeSearchInput" />
+               
                 @if (!string.IsNullOrEmpty((string?)ViewData["CurrentFilter"]))
                 {
                     <a asp-action="Index" class="clear-search" aria-label="Clear search">&times;</a>
                 }
             </form>
+           
+            <div id="suggestionsDropdown" class="suggestions-dropdown"></div>
             <a asp-controller="Recipe" asp-action="Create" class="btn btn-create-new">
-                <i class="fas fa-plus"></i> New Recipe 
+                <i class="fas fa-plus"></i> New Recipe
             </a>
         </div>
     </header>
@@ -39,23 +44,83 @@
                         </p>
                     </div>
                     <footer class="card-footer">
-                        <span class="author">@* @item.AuthorUsername *@</span>
+                        <span class="author">@item.AuthorUsername</span>
                         <time datetime="@item.CreatedAt.ToString("yyyy-MM-dd")">@item.CreatedAt.ToString("MMM dd, yyyy")</time>
                     </footer>
                 </article>
             }
         </section>
+
+       
     }
     else
     {
-        <p class="no-recipes-found-modern">
-            No recipes found. Ready to create the first one?
-            <a asp-action="Create">Add Recipe</a>
-        </p>
+        <div class="no-recipes-container">
+            <p class="no-recipes-found-modern">
+                No recipes found matching your search criteria.
+                <a asp-action="Create" class="link-add-recipe">
+                     Add yours!
+                </a>
+            </p>
+        </div>
     }
 
 </div>
 
 @section Scripts {
-    <script src="https://kit.fontawesome.com/your-fontawesome-kit-code.js" crossorigin="anonymous"></script> @* Замени с твоя код *@
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit-code.js" crossorigin="anonymous">
+        </script> 
+        <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('recipeSearchInput');
+            const suggestionsDropdown = document.getElementById('suggestionsDropdown');
+            let debounceTimer;
+
+            if (!searchInput || !suggestionsDropdown) {
+                console.error("Search input or suggestions dropdown not found.");
+                return;
+            }
+
+            searchInput.addEventListener('keyup', function () {
+                clearTimeout(debounceTimer);
+                const term = searchInput.value;
+
+                if (term.length < 2) {
+                    suggestionsDropdown.innerHTML = '';
+                    suggestionsDropdown.style.display = 'none';
+                    return;
+                }
+
+                debounceTimer = setTimeout(() => {
+                    fetch(`/Recipe/SearchSuggestions?term=${encodeURIComponent(term)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.length > 0) {
+                                let html = '<ul>';
+                                data.forEach(item => {
+                                    html += `<li><a href="/Recipe/Details/${item.id}">${item.name}</a></li>`;
+                                });
+                                html += '</ul>';
+                                suggestionsDropdown.innerHTML = html;
+                                suggestionsDropdown.style.display = 'block';
+                            } else {
+                                suggestionsDropdown.innerHTML = '';
+                                suggestionsDropdown.style.display = 'none';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching search suggestions:', error);
+                            suggestionsDropdown.innerHTML = '';
+                            suggestionsDropdown.style.display = 'none';
+                        });
+                }, 300);
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!searchInput.contains(e.target) && !suggestionsDropdown.contains(e.target)) {
+                    suggestionsDropdown.style.display = 'none';
+                }
+            });
+        });
+        </script>
 }

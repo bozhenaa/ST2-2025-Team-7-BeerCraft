@@ -147,8 +147,8 @@ namespace BeerCraftMVC.Controllers
             int.TryParse(userIdString, out int userId);
             return userId;
         }
-    
-    public async Task<IActionResult> Delete(int id)
+
+        public async Task<IActionResult> Delete(int id)
         {
             var userId = GetUser();
             if (userId == 0) return Unauthorized();
@@ -169,5 +169,29 @@ namespace BeerCraftMVC.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+    
+
+    [HttpGet]
+        public async Task<IActionResult> SearchSuggestion(string term)
+        {
+            if (string.IsNullOrEmpty(term) || term.Length < 2)
+            {
+                return Json(new List<object>());
+            }
+
+            var suggestions = await _context.Recipes
+                .Where(r => r.Name.ToLower().Contains(term.ToLower()))
+                .OrderBy(r => r.Name)
+                .Take(5)
+                .Select(r => new
+                {
+                    id = r.Id,
+                    name = r.Name
+                })
+                .ToListAsync();
+
+            return Json(suggestions);
+        }
+
     }
 }

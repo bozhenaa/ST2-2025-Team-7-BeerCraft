@@ -22,5 +22,8 @@ namespace BeerCraftMVC.Models.ViewModels.Profile
 
         [Display(Name = "My Inventory")]
         public List<InventoryItemViewModel> InventoryItems { get; set; } = new List<InventoryItemViewModel>();
+        [Display(Name = "My Recipes")]
+        public List<UserRecipeViewModel> CreatedRecipes { get; set; } = new List<UserRecipeViewModel>();
+
     }
 }

@@ -6,13 +6,13 @@
     <link rel="stylesheet" href="~/css/profile.css" />
     <link rel="stylesheet" href="~/css/second_layout.css" />
 }
-<div class="profile-grid-container">
+<div class="profile-container">
     <header class="profile-header">
         <h1>@ViewData["Title"]</h1>
     </header>
 
-    <section class="profile-details-grid">
-        <h2 class="section-title-grid">Profile Details</h2>
+    <section class="profile-details-section">
+        <h2 class="section-title">Profile Details</h2>
         <dl>
             <dt>@Html.DisplayNameFor(model => model.Username)</dt>
             <dd>@Html.DisplayFor(model => model.Username)</dd>
@@ -28,11 +28,11 @@
         </dl>
     </section>
 
-    <section class="profile-inventory-grid">
-        <h2 class="section-title-grid">@Html.DisplayNameFor(model => model.InventoryItems)</h2>
+    <section class="profile-inventory-section">
+        <h2 class="section-title">@Html.DisplayNameFor(model => model.InventoryItems)</h2>
         @if (Model.InventoryItems.Any())
         {
-            <ul class="inventory-list-grid">
+            <ul class="inventory-list-rows">
                 @foreach (var item in Model.InventoryItems)
                 {
                     <li>
@@ -46,9 +46,30 @@
         {
             <p class="empty-message">Your inventory is empty.</p>
         }
-            </section>
 
-    <footer class="profile-actions-grid">
+    </section>
+
+    <section class="profile-recipes-section">
+        <h2 class="section-title">@Html.DisplayNameFor(model => model.CreatedRecipes)</h2>
+        @if (Model.CreatedRecipes.Any())
+        {
+            <ul class="recipe-list-rows">
+                @foreach (var item in Model.CreatedRecipes)
+                {
+                    <li>
+                        <a asp-controller="Recipe" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="empty-message">You have not created any recipes yet.</p>
+        }
+    </section>
+
+    <footer class="profile-actions">
         <a asp-action="EditProfile" asp-route-id="@Model.UserId" class="btn btn-primary">Edit Profile</a>
-        <a asp-controller="Inventory" asp-action="Index" asp-route-id="@Model.UserId" class="btn btn-primary">Edit Inventory</a>
+        <a asp-controller="Inventory" asp-action="Index" class="btn btn-primary">Edit Inventory</a>
     </footer>
+</div>

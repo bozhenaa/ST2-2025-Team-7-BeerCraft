@@ -35,7 +35,7 @@ namespace BeerCraftMVC.Controllers
             string activePanel = string.IsNullOrEmpty(panel) ? "login" : panel.ToLower();
             ViewBag.ActivePanel = activePanel;
 
-           var model = new LoginRegisterViewModel
+            var model = new LoginRegisterViewModel
             {
                 Login = new LoginViewModel(),
                 Register = new RegisterViewModel()
@@ -43,12 +43,12 @@ namespace BeerCraftMVC.Controllers
             return View(model);
 
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register([Bind(Prefix = "Register")] RegisterViewModel registerModel)
         {
-           
+
 
             if (!ModelState.IsValid)
             {
@@ -105,8 +105,8 @@ namespace BeerCraftMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login([Bind(Prefix = "Login")] LoginViewModel loginModel, string returnUrl = null) 
-        { 
+        public async Task<IActionResult> Login([Bind(Prefix = "Login")] LoginViewModel loginModel, string returnUrl = null)
+        {
             if (!ModelState.IsValid)
             {
                 var wrapperModel = new LoginRegisterViewModel
@@ -160,10 +160,10 @@ namespace BeerCraftMVC.Controllers
                 new Claim(ClaimTypes.Email, user.Email)
               };
 
-            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme); 
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             //създаване на claims identity с помощта на cookies
 
-            var authProperties = new AuthenticationProperties
+            var authProperties = new AuthenticationProperties
             {
                 IsPersistent = true, //"запомни ме..."
                 ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7)//"...за следващите 7 дни"
@@ -180,17 +180,17 @@ namespace BeerCraftMVC.Controllers
         public async Task<IActionResult> Profile()
         {
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier); //взима ID-то на вписания потребител от claims
-            if(string.IsNullOrEmpty(userIdString)|| !int.TryParse(userIdString, out int userId))
+            if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out int userId))
             {
-                
+
                 return RedirectToAction("Access", "Account");
             }
-                var user = await _userRepository.GetByIdAsync(userId);
-                if (user == null)
-                {
-                    await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-                    return RedirectToAction("Access", "Account");
-                }
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                return RedirectToAction("Access", "Account");
+            }
             var viewModel = new ProfileViewModel
             {
                 UserId = user.Id,
@@ -198,16 +198,49 @@ namespace BeerCraftMVC.Controllers
                 Name = user.Name,
                 Email = user.Email,
                 CreatedAt = user.CreatedAt,
-                InventoryItems = user.Inventory 
-         .OrderBy(inv => inv.Ingredient.Name) 
+                InventoryItems = user.Inventory
+         .OrderBy(inv => inv.Ingredient.Name)
          .Select(inv => new InventoryItemViewModel
          {
              IngredientId = inv.IngredientId,
-             IngredientName = inv.Ingredient.Name, 
+             IngredientName = inv.Ingredient.Name,
              Quantity = inv.Quantity
-         }).ToList()
+         }).ToList(),
+                CreatedRecipes = user.Recipes
+            .OrderByDescending(r => r.CreatedAt)
+            .Select(r => new UserRecipeViewModel
+            {
+                Id = r.Id,
+                Name = r.Name
+            }).ToList()
             };
             //попълва информацията за потребителя и неговия инвентар
+            return View(viewModel);
+        }
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> EditProfile()
+        {
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userIdString, out int userId))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new EditProfileViewModel
+            {
+                UserId = user.Id,
+                Username = user.Username,
+                Name = user.Name,
+                Email = user.Email
+            };
+
             return View(viewModel);
         }
 
@@ -220,12 +253,12 @@ namespace BeerCraftMVC.Controllers
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!int.TryParse(userIdString, out int currentUserId) || viewModel.UserId != currentUserId)
             {
-                return Forbid(); 
+                return Forbid();
             }
 
             if (ModelState.IsValid)
             {
-                
+
                 var userToUpdate = await _userRepository.GetByIdAsync(viewModel.UserId);
                 if (userToUpdate == null)
                 {
@@ -237,23 +270,23 @@ namespace BeerCraftMVC.Controllers
                 {
                     await _userRepository.UpdateAsync(userToUpdate);
                     TempData["SuccessMessage"] = "Profile updated successfully!";
-                    return RedirectToAction("Profile"); 
+                    return RedirectToAction("Profile");
                 }
-                catch (DbUpdateConcurrencyException) 
+                catch (DbUpdateConcurrencyException)
                 {
-                  
+
                     ModelState.AddModelError("", "Unable to save changes. " +
                         "Try again, and if the problem persists, see system administrator.");
                 }
             }
 
-          
+
             viewModel.Username = User.Identity.Name;
             var originalUser = await _userRepository.GetByIdAsync(viewModel.UserId);
             if (originalUser != null) viewModel.Email = originalUser.Email;
 
 
-            return View(viewModel); 
+            return View(viewModel);
         }
     }
 }

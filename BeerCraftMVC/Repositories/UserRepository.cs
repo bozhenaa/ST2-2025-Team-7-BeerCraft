@@ -36,6 +36,7 @@ namespace BeerCraftMVC.Repositories
             return await _context.Users
          .Include(u => u.Inventory) 
              .ThenInclude(inv => inv.Ingredient)
+             .Include(u => u.Recipes)
          .AsNoTracking() 
          .FirstOrDefaultAsync(u => u.Id == id); 
         }
