@@ -166,7 +166,7 @@ body.home-page {
 }
 
 .btn-primary {
-    background-color: var(--accent-color);
+    background-color: var(--button-bg);
     color: var(--button-text);
     border-color: var(--button-bg);
 }
