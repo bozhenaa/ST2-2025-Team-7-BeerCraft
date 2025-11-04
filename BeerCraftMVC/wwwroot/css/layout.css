@@ -1,4 +1,4 @@
-﻿:root {
+﻿/*:root {
     --bg-color: #FDF8F1;
     --stripe-color: #FFFFFF;
     --text-color: #332E2C;
@@ -12,11 +12,21 @@
     --font-heading: 'Oswald', sans-serif;
     --current-page: #B47A3B;
 }
-.home-page body {
-    background-image: repeating-linear-gradient( to right, var(--bg-color), var(--bg-color) 40px, var(--stripe-color) 40px, var(--stripe-color) 80px );
-  
+*/
+:root {
+    --bg-color: #626609; /* Тъмно маслинено зелено */
+    --stripe-color: #0d0d0d; /* Почти черно */
+    --text-color: #dadada; /* Много светло сиво  */
+    --accent-color: #bcb837; /* Ярко жълто-зелено/лайм  */
+    --accent-stripe: #2b2d07; /* Много тъмно каки */
+    --button-bg: #353709; /* Тъмно каки/зелено (*/
+    --button-text: #FFFFFF; /* Бяло */
+    --current-page: #bcb837; /* Ярко жълто-зелено/лайм */
+    --bg-color-dark: #1c1d13; /*Много тъмно зелено/сиво*/
+    --font-headingS: 'Anton', sans-serif;
+    --font-body: 'Montserrat', sans-serif;
+    --font-heading: 'Oswald', sans-serif;
 }
-
 body {
     display: flex;
     flex-direction: column;
@@ -26,14 +36,31 @@ body {
     background-color: var(--bg-color);
     margin: 0;
     padding: 0;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.8)), url('../images/beerbackground.jpg');
+    background-color: #333;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
-
 .page-header {
     display: flex;
     align-items: center;
     padding: 10px 20px;
-    background-color: var(--bg-color);
 }
+body.home-page {
+    background-image: url('../images/beerbackground.jpg');
+}
+.navigation nav {
+    border-top: none;
+}
+
+.btn {
+    padding: 0.5em 1.2em;
+    font-size: 0.85rem;
+    border-radius: 20px;
+}
+
+
 
 .logo {
     font-family: var(--font-headingS);
@@ -101,22 +128,20 @@ body {
 }
 
     .nav-link-button:hover {
-        border-color: var(--text-color);
-        color: var(--text-color);
+        color: var(--bg-color);
     }
 
 .navigation nav a:hover {
-    color: #B47A3B;
+    color: #626609;
 }
 
 .home-page .page-header {
-    padding: 40px 40px 30px 40px;
+    padding: 20px 40px 20px 40px;
     align-items: flex-end;
 }
 
 .home-page .logo {
-    font-size: 8rem;
-    line-height: 0.8;
+    font-size: 6rem;
 }
 
 .home-page .navigation p {
@@ -141,7 +166,7 @@ body {
 }
 
 .btn-primary {
-    background-color: var(--button-bg);
+    background-color: var(--accent-color);
     color: var(--button-text);
     border-color: var(--button-bg);
 }
@@ -161,18 +186,19 @@ body {
 
     .btn-secondary:hover {
         background-color: var(--button-text);
-        color: var(--accent-color);
+        color: var(--button-bg);
         cursor: pointer;
     }
 
 .page-footer {
     text-align: center;
-    padding: 15px 40px;
-    background-color: var(--bg-color);
-    border-top: 1px solid var(--text-color);
+    padding: 5px 40px;
+    border-top: 1px solid var(--accent-color);
     margin-top: auto;
     width: 100%;
     box-sizing: border-box;
+    color:#8f8f8f;
+    background-color:var(--stripe-color);
 }
 
 

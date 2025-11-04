@@ -30,7 +30,7 @@ h1 {
 }
 
 .info-panel {
-    background-color: var(--accent-color);
+    background-color: var(--accent-stripe);
     background-image: repeating-linear-gradient( 45deg, rgba(0,0,0,0.05) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.05) 75%, rgba(0,0,0,0.05) ), repeating-linear-gradient( -45deg, rgba(0,0,0,0.05) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.05) 75%, rgba(0,0,0,0.05) );
     background-size: 20px 20px;
     padding: 3rem;
@@ -121,7 +121,6 @@ h4.mt-4 {
     padding-top: 2rem;
 }
 
-/* --- СТИЛОВЕ ЗА БУТОНИТЕ --- */
 .btn-outline-secondary {
     border-color: var(--accent-color);
     color: var(--accent-color);
@@ -161,6 +160,7 @@ h4.mt-4 {
     }
 
 .form-actions .btn-primary:hover {
+    color: var(--accent-color);
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
@@ -170,7 +170,6 @@ h4.mt-4 {
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* --- ПОПРАВКА НА СИНТАКСИСА (липсваше '.') --- */
 .btn-delete {
     background-color: transparent;
     border: 1px solid #dc3545;
@@ -194,12 +193,11 @@ h4.mt-4 {
         transform: scale(1.1);
     }
 
-/* --- НОВИ СТИЛОВЕ ЗА FLEXBOX РЕД --- */
 .ingredient-row-modern {
     display: flex;
     align-items: flex-start;
     gap: 1rem;
-    background-color: #f8f9fa;
+    background-color: var(--bg-color-dark);
     padding: 1rem;
     border-radius: 8px;
     margin-bottom: 1rem !important;

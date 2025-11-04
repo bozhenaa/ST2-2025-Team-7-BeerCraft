@@ -1,9 +1,9 @@
 ﻿.profile-grid-container.edit-profile-form {
     display: grid;
-    grid-template-columns: 1fr; /* Single column layout for the form */
-    grid-template-rows: auto 1fr auto; /* Header, Form Content, Footer */
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto; 
     gap: 1.5rem;
-    max-width: 700px; /* Adjust max-width for form */
+    max-width: 700px; 
     margin: 2rem auto;
     padding: 2rem;
     background-color: var(--stripe-color, #fff);
@@ -24,12 +24,12 @@
         color: var(--text-color);
         margin: 0;
         letter-spacing: 0.05em;
-        font-size: 2rem; /* Slightly smaller title for edit form */
+        font-size: 2rem; 
     }
 
 .edit-profile-main-content {
     grid-column: 1 / -1;
-    padding: 0; /* Remove extra padding if container has it */
+    padding: 0;
 }
 
 .form-group-grid {
@@ -55,6 +55,7 @@
     color: var(--text-color);
     box-sizing: border-box;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background:var(--bg-color);
 }
 
     .form-control-grid:focus {
@@ -64,7 +65,7 @@
     }
 
     .form-control-grid.readonly {
-        background-color: #e9ecef;
+        background-color: var(--bg-color-dark);
         cursor: not-allowed;
         border-color: rgba(var(--text-color-rgb, 51, 46, 44), 0.1);
     }
@@ -87,7 +88,7 @@
 }
 
     .profile-actions-grid .btn {
-        padding: 0.6em 1.5em; /* Slightly larger padding than profile view */
+        padding: 0.6em 1.5em;
         font-size: 0.9rem;
         border-radius: 25px;
     }
@@ -108,9 +109,9 @@
         }
 
     .profile-actions-grid .btn-primary {
-        /* Assuming styles come from layout.css */
+       
     }
 
         .profile-actions-grid .btn-primary:hover {
-            /* Assuming styles come from layout.css */
+    
         }
