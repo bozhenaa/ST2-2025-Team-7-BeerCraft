@@ -4,6 +4,7 @@
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/add-recipe.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -12,14 +13,14 @@
 
     <div class="form-content">
         <form asp-action="Create" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
-            @* --- Име и Описание (Без промяна) --- *@
             <div class="mb-3">
                 <label asp-for="Name" class="form-label"></label>
                 <input asp-for="Name" class="form-control" placeholder="e.g., Classic American Pale Ale" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
+
             <div class="mb-3">
                 <label asp-for="Description" class="form-label"></label>
                 <textarea asp-for="Description" class="form-control" rows="5" placeholder="Describe your recipe..."></textarea>
@@ -27,51 +28,43 @@
             </div>
 
             <h4 class="mt-4">Ingredients</h4>
-            @* --- 👇 КОНТЕЙНЕР ЗА РЕДОВЕТЕ 👇 --- *@
             <div id="ingredientsList">
-                @* --- 👇 @for ЦИКЪЛЪТ ГЕНЕРИРА РЕДОВЕТЕ ДИРЕКТНО ТУК 👇--- *@
                 @for (int i = 0; i < Model.Ingredients.Count; i++)
                 {
-                    <div class="ingredient-row row mb-3 align-items-start" data-index="@i">
-                        <div class="col-md-5 ingredient-selection">
-                            <label asp-for="Ingredients[i].IngredientId" class="form-label"></label>
-                            <select asp-for="Ingredients[i].IngredientId" asp-items="Model.AvailableIngredients" class="form-select ingredient-select">
-                                <option value="">-- Select Ingredient --</option>
-                                <option value="-1">-- Add New Ingredient --</option>
-                            </select>
-                            <span asp-validation-for="Ingredients[i].IngredientId" class="text-danger"></span>
-                            <div class="new-ingredient-fields" style="display: none; margin-top: 10px;">
-                                <input asp-for="Ingredients[i].NewIngredientName" class="form-control mb-2" placeholder="Enter new ingredient name" />
-                                <span asp-validation-for="Ingredients[i].NewIngredientName" class="text-danger"></span>
-                                <select asp-for="Ingredients[i].NewIngredientTypeId" asp-items="Model.AvailableIngredientTypes" class="form-select ingredient-type-select">
-                                    <option value="">-- Select Type --</option>
+                    <div class="ingredient-row-modern" data-index="@i">
+                        <div class="ingredient-fields">
+                            <div class="field-group ingredient-name-group">
+                                <label asp-for="Ingredients[i].IngredientId" class="form-label"></label>
+                                <select asp-for="Ingredients[i].IngredientId" asp-items="Model.AvailableIngredients" class="form-select ingredient-select">
+                                    <option value="">-- Select Ingredient --</option>
                                 </select>
-                                <span asp-validation-for="Ingredients[i].NewIngredientTypeId" class="text-danger"></span>
+                                <span asp-validation-for="Ingredients[i].IngredientId" class="text-danger"></span>
+                            </div>
+                            <div class="field-group ingredient-quantity-group">
+                                <label asp-for="Ingredients[i].Quantity" class="form-label"></label>
+                                <input asp-for="Ingredients[i].Quantity" type="number" step="any" class="form-control" placeholder="e.g., 5.5" />
+                                <span asp-validation-for="Ingredients[i].Quantity" class="text-danger"></span>
+                            </div>
+                            <div class="field-group ingredient-unit-group">
+                                <label asp-for="Ingredients[i].Unit" class="form-label"></label>
+                                <select asp-for="Ingredients[i].Unit" asp-items="Model.AvailableUnits" class="form-select">
+                                    <option value="">-- Unit --</option>
+                                </select>
+                                <span asp-validation-for="Ingredients[i].Unit" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <label asp-for="Ingredients[i].Quantity" class="form-label"></label>
-                            <input asp-for="Ingredients[i].Quantity" type="number" step="any" class="form-control" placeholder="e.g., 5.5" />
-                            <span asp-validation-for="Ingredients[i].Quantity" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-3">
-                            <label asp-for="Ingredients[i].Unit" class="form-label"></label>
-                            <select asp-for="Ingredients[i].Unit" asp-items="Model.AvailableUnits" class="form-select">
-                                <option value="">-- Unit --</option>
-                            </select>
-                            <span asp-validation-for="Ingredients[i].Unit" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-1 text-end">
-                            <button type="button" class="btn btn-sm btn-outline-danger remove-ingredient mt-4" style="@(Model.Ingredients.Count <= 1 ? "display:none;" : "")" aria-label="Remove Ingredient">&times;</button>
+                        <div class="ingredient-remove-action">
+                            <button type="button" class="btn-remove-ingredient" style="@(Model.Ingredients.Count <= 1 ? "display:none;" : "")" aria-label="Remove Ingredient">
+                                <i class="fas fa-times"></i>
+                            </button>
                         </div>
                     </div>
                 }
-                @* --- 👆 КРАЙ НА @for ЦИКЪЛА 👆 --- *@
             </div>
-            @* --- 👆 КРАЙ НА КОНТЕЙНЕРА ЗА РЕДОВЕ 👆 --- *@
 
-            @* --- БУТОН ЗА ДОБАВЯНЕ --- *@
-            <button type="button" id="addIngredientBtn" class="btn btn-outline-secondary mb-3">Add New Ingredient</button>
+            <button type="button" id="addIngredientBtn" class="btn btn-outline-secondary mb-3">
+                <i class="fas fa-plus"></i> Add Ingredient
+            </button>
 
             <div class="form-actions">
                 <a asp-action="Index" class="btn btn-secondary">Cancel</a>
@@ -80,51 +73,42 @@
         </form>
     </div>
 
-    @* --- ШАБЛОНЪТ (ОСТАВА СЪЩИЯТ) --- *@
-    <div id="ingredientRowTemplate" class="ingredient-row row mb-3 align-items-start" style="display: none;" data-index="__INDEX__">
-        @* ... (Съдържанието на шаблона е същото като преди) ... *@
-        <div class="col-md-5 ingredient-selection">
-            <label for="Ingredients___INDEX__IngredientId" class="form-label">Ingredient</label>
-            <select name="Ingredients[__INDEX__].IngredientId" class="form-select ingredient-select">
-                <option value="">-- Select Ingredient --</option>
-                <option value="-1">-- Add New Ingredient --</option>
-                @foreach (var item in Model.AvailableIngredients)
-                {
-                    <option value="@item.Value">@item.Text</option>
-                }
-            </select>
-            <span class="text-danger field-validation-valid" data-valmsg-for="Ingredients[__INDEX__].IngredientId"></span>
-            <div class="new-ingredient-fields" style="display: none; margin-top: 10px;">
-                <input name="Ingredients[__INDEX__].NewIngredientName" class="form-control mb-2" placeholder="Enter new ingredient name" />
-                <span class="text-danger field-validation-valid" data-valmsg-for="Ingredients[__INDEX__].NewIngredientName"></span>
-                <select name="Ingredients[__INDEX__].NewIngredientTypeId" class="form-select ingredient-type-select">
-                    <option value="">-- Select Type --</option>
-                    @foreach (var item in Model.AvailableIngredientTypes)
+    <div id="ingredientRowTemplate" class="ingredient-row-modern" style="display: none;" data-index="__INDEX__">
+        <div class="ingredient-fields">
+            <div class="field-group ingredient-name-group">
+                <label for="Ingredients___INDEX__IngredientId" class="form-label">Ingredient</label>
+                <select name="Ingredients[__INDEX__].IngredientId" class="form-select ingredient-select">
+                    <option value="">-- Select Ingredient --</option>
+                    @foreach (var item in Model.AvailableIngredients)
                     {
                         <option value="@item.Value">@item.Text</option>
                     }
                 </select>
-                <span class="text-danger field-validation-valid" data-valmsg-for="Ingredients[__INDEX__].NewIngredientTypeId"></span>
+                <span class="text-danger field-validation-valid" data-valmsg-for="Ingredients[__INDEX__].IngredientId"></span>
+            </div>
+            <div class="field-group ingredient-quantity-group">
+                <label for="Ingredients___INDEX__Quantity" class="form-label">Quantity</label>
+                <input name="Ingredients[__INDEX__].Quantity" type="number" step="any" class="form-control" placeholder="e.g., 5.5" />
+                <span class="text-danger field-validation-valid" data-valmsg-for="Ingredients[__INDEX__].Quantity"></span>
+            </div>
+            <div class="field-group ingredient-unit-group">
+                <label for="Ingredients___INDEX__Unit" class="form-label">Unit</label>
+                <select name="Ingredients[__INDEX__].Unit"
+                        class="form-select">
+                       
+                    <option value="">-- Unit --</option>
+                    @foreach (var item in Model.AvailableUnits)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+                <span class="text-danger field-validation-valid" data-valmsg-for="Ingredients[__INDEX__].Unit"></span>
             </div>
         </div>
-        <div class="col-md-3">
-            <label for="Ingredients___INDEX__Quantity" class="form-label">Quantity</label>
-            <input name="Ingredients[__INDEX__].Quantity" type="number" step="any" class="form-control" placeholder="e.g., 5.5" />
-            <span class="text-danger field-validation-valid" data-valmsg-for="Ingredients[__INDEX__].Quantity"></span>
-        </div>
-        <div class="col-md-3">
-            <label for="Ingredients___INDEX__Unit" class="form-label">Unit</label>
-            <select name="Ingredients[__INDEX__].Unit" class="form-select">
-                <option value="">-- Unit --</option>
-                @foreach (var item in Model.AvailableUnits)
-                {
-                    <option value="@item.Value">@item.Text</option>
-                }
-            </select>
-            <span class="text-danger field-validation-valid" data-valmsg-for="Ingredients[__INDEX__].Unit"></span>
-        </div>
-        <div class="col-md-1 text-end">
-            <button type="button" class="btn btn-sm btn-outline-danger remove-ingredient mt-4" aria-label="Remove Ingredient">&times;</button>
+        <div class="ingredient-remove-action">
+            <button type="button" class="btn-remove-ingredient" aria-label="Remove Ingredient">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
     </div>
 
@@ -143,5 +127,82 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script src="~/js/add-recipe.js"></script>
+    <script>
+                document.addEventListener('DOMContentLoaded', function () {
+            const ingredientsList = document.getElementById('ingredientsList');
+            const addIngredientBtn = document.getElementById('addIngredientBtn');
+            const templateRow = document.getElementById('ingredientRowTemplate');
+
+            if (!ingredientsList || !addIngredientBtn || !templateRow) {
+                console.error("ERROR: Required elements not found.");
+                return;
+            }
+
+            addIngredientBtn.addEventListener('click', function () {
+                const existingRows = ingredientsList.querySelectorAll('.ingredient-row-modern:not(#ingredientRowTemplate)');
+                const newIndex = existingRows.length;
+
+                const newRow = templateRow.cloneNode(true);
+                newRow.removeAttribute('id');
+                newRow.style.display = 'flex';
+                newRow.dataset.index = newIndex;
+
+                updateAttributes(newRow, newIndex);
+
+                ingredientsList.appendChild(newRow);
+                updateRemoveButtonsVisibility();
+
+                const form = ingredientsList.closest('form');
+                if (form && typeof $ !== 'undefined' && $.validator && $.validator.unobtrusive) {
+                    $.validator.unobtrusive.parse(newRow);
+                }
+            });
+
+            ingredientsList.addEventListener('click', function (e) {
+                const removeButton = e.target.closest('.btn-remove-ingredient');
+                if (removeButton) {
+                    e.preventDefault();
+                    const rowToRemove = removeButton.closest('.ingredient-row-modern');
+                    const visibleRows = ingredientsList.querySelectorAll('.ingredient-row-modern:not(#ingredientRowTemplate):not([style*="display: none"])');
+
+                    if (rowToRemove && visibleRows.length > 1) {
+                        rowToRemove.remove();
+                        reindexRows();
+                        updateRemoveButtonsVisibility();
+                    }
+                }
+            });
+
+            function updateAttributes(row, index) {
+                row.querySelectorAll('[name*="__INDEX__"], [id*="__INDEX__"], [for*="__INDEX__"], [data-valmsg-for*="__INDEX__"]').forEach(el => {
+                    if (el.name) el.name = el.name.replace(/__INDEX__/g, index);
+                    if (el.id) el.id = el.id.replace(/__INDEX__/g, index);
+                    if (el.htmlFor) el.htmlFor = el.htmlFor.replace(/__INDEX__/g, index);
+                    if (el.dataset.valmsgFor) el.dataset.valmsgFor = el.dataset.valmsgFor.replace(/__INDEX__/g, index);
+                });
+            }
+
+            function reindexRows() {
+                const rows = ingredientsList.querySelectorAll('.ingredient-row-modern:not(#ingredientRowTemplate)');
+                rows.forEach((row, newIndex) => {
+                    row.dataset.index = newIndex;
+                    updateAttributes(row, newIndex);
+                });
+            }
+
+            function updateRemoveButtonsVisibility() {
+                const rows = ingredientsList.querySelectorAll('.ingredient-row-modern:not(#ingredientRowTemplate)');
+                const showRemove = rows.length > 1;
+                rows.forEach((row, index) => {
+                    const removeBtn = row.querySelector('.btn-remove-ingredient');
+                    if (removeBtn) {
+                        removeBtn.style.display = showRemove ? 'flex' : 'none';
+                    }
+                });
+            }
+
+            updateRemoveButtonsVisibility();
+        });
+
+    </script>
 }

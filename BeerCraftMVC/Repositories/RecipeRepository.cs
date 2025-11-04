@@ -15,7 +15,13 @@ namespace BeerCraftMVC.Repositories
 
         public async Task<Recipe> GetByIdAsync(int id)
         {
-            return await _context.Recipes.FindAsync(id);
+            return await _context.Recipes
+                .Include(r => r.RecipeIngredients)
+                .ThenInclude(ri => ri.Ingredient)
+                .ThenInclude(ing => ing.IngredientType)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(r => r.Id == id);
+
         }
 
         public async Task AddAsync(Recipe recipe)
@@ -32,10 +38,7 @@ namespace BeerCraftMVC.Repositories
                 await _context.SaveChangesAsync();
             }
         }
-        public async Task<IEnumerable<Recipe>> GetAllAsync()
-        {
-            return await _context.Recipes.ToListAsync();
-        }
+      
       
         public async Task UpdateAsync(Recipe recipe)
         {
@@ -43,13 +46,14 @@ namespace BeerCraftMVC.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task <IEnumerable<Recipe>> SearchAsync(string searchTerm)
+        public async Task<IEnumerable<Recipe>> SearchAsync(string searchTerm)
         {
-            var query = _context.Recipes.AsQueryable();
+            var query = _context.Recipes
+                                .AsQueryable(); 
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                string lowerSearchTerm = searchTerm.ToLower(); 
+                string lowerSearchTerm = searchTerm.ToLower();
                 query = query.Where(r =>
                     r.Name.ToLower().Contains(lowerSearchTerm) ||
                     (r.Description != null && r.Description.ToLower().Contains(lowerSearchTerm)));
@@ -57,9 +61,16 @@ namespace BeerCraftMVC.Repositories
 
             return await query
                         .OrderByDescending(r => r.CreatedAt)
-                        .AsNoTracking() 
+                        .AsNoTracking()
                         .ToListAsync();
-            
+        }
+
+        public async Task<IEnumerable<Recipe>> GetAllAsync()
+        {
+            return await _context.Recipes
+                .OrderByDescending(r => r.CreatedAt)
+                .AsNoTracking()
+                .ToListAsync();
         }
         public async Task<IEnumerable<Ingredient>> GetAllIngredientsSimpleAsync()
         {

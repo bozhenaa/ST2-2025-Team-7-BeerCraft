@@ -6,24 +6,15 @@ namespace BeerCraftMVC.Models.ViewModels.Recipes
 {
     public class RecipeIngredientInputModel
     {
-        [Required]
-        [Display(Name ="Ingredient")]
+        [Required(ErrorMessage = "Please select an ingredient")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select an ingredient")]
+        [Display(Name = "Ingredient")]
         public int IngredientId { get; set; }
-
-        [Display(Name = "New Ingredient Name")]
-        [MaxLength(100)] 
-        public string? NewIngredientName { get; set; } 
-
-        [Display(Name = "Ingredient Type")]
-        public int? NewIngredientTypeId { get; set; }
 
         [Required]
         [Range(0.01, double.MaxValue, ErrorMessage = "Quantity must be positive")]
         public double Quantity { get; set; }
-        [Required]
-        [MaxLength(20)]
-        public string Unit { get; set; }
 
-
+        public string? Unit { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
 namespace BeerCraftMVC.Models.ViewModels.Recipes
@@ -8,19 +9,20 @@ namespace BeerCraftMVC.Models.ViewModels.Recipes
         [Required]
         [MaxLength(100)]
         public string Name { get; set; }
+
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
-        public List<RecipeIngredientInputModel> Ingredients { get; set; } = new List<RecipeIngredientInputModel>();
-        public SelectList AvailableIngredients { get; set; }
 
-        public SelectList AvailableIngredientTypes { get; set; } = new SelectList(new List<string> { });
-        public SelectList AvailableUnits { get; set; } = new SelectList(new List<string> { "g", "kg", "ml", "l", "oz", "lb" });
+        public List<RecipeIngredientInputModel> Ingredients { get; set; } = new List<RecipeIngredientInputModel>();
+
+        [ValidateNever]
+        public SelectList AvailableIngredients { get; set; }
+        [ValidateNever]
+        public SelectList AvailableUnits { get; set; } = new SelectList(new List<string> { "g", "kg", "ml", "l", "oz", "lb", "packet", "tsp", "tbsp" });
 
         public AddRecipeViewModel()
         {
             Ingredients.Add(new RecipeIngredientInputModel());
         }
-
-
     }
 }
