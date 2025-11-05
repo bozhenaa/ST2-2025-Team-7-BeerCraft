@@ -67,6 +67,24 @@
             <p class="empty-message">You have not created any recipes yet.</p>
         }
     </section>
+    <section class="profile-liked-recipes-section">
+        <h2 class="section-title">@Html.DisplayNameFor(model => model.LikedRecipes)</h2>
+        @if (Model.LikedRecipes.Any())
+        {
+            <ul class="recipe-list-rows">
+                @foreach (var item in Model.LikedRecipes)
+                {
+                    <li>
+                        <a asp-controller="Recipe" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="empty-message">You have not liked any recipes yet.</p>
+        }
+    </section>
 
     <footer class="profile-actions">
         <a asp-action="EditProfile" asp-route-id="@Model.UserId" class="btn btn-primary">Edit Profile</a>

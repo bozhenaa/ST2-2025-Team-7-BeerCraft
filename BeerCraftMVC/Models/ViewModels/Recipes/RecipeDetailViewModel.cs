@@ -9,5 +9,6 @@
         public DateTime CreatedAt { get; set; }
 
         public List<RecipeIngredientViewModel> Ingredients { get; set; } = new List<RecipeIngredientViewModel>();
+        public bool IsLikedByCurrentUser { get; set; }
     }
 }

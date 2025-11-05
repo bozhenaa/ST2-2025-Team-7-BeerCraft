@@ -7,6 +7,7 @@
         public string Description { get; set; }
         public string AuthorUsername { get; set; }
         public DateTime CreatedAt { get; set; }
+        public bool IsLiked { get; set; }
 
     }
 }

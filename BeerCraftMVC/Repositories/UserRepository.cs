@@ -34,9 +34,11 @@ namespace BeerCraftMVC.Repositories
         public async Task<User> GetByIdAsync(int id)
         {
             return await _context.Users
-         .Include(u => u.Inventory) 
+             .Include(u => u.Inventory) 
              .ThenInclude(inv => inv.Ingredient)
              .Include(u => u.Recipes)
+             .Include(u => u.LikedRecipes)
+             .ThenInclude(lr => lr.Recipe)
          .AsNoTracking() 
          .FirstOrDefaultAsync(u => u.Id == id); 
         }

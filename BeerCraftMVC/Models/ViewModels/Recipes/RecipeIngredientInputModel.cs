@@ -15,6 +15,8 @@ namespace BeerCraftMVC.Models.ViewModels.Recipes
         [Range(0.01, double.MaxValue, ErrorMessage = "Quantity must be positive")]
         public double Quantity { get; set; }
 
-        public string? Unit { get; set; }
+        [Required(ErrorMessage = "Please select a unit")]
+        [MaxLength(20)]
+        public string Unit { get; set; } = "g";
     }
 }

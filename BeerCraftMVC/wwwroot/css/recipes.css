@@ -1,13 +1,22 @@
 ﻿#exploreNav a{
     color: var(--current-page);
 }
-
+.card-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items:start;
+    gap: 1rem;
+}
+.card-title-row i{
+    color:var(--text-color);
+    font-size:1rem;
+}
 .recipe-page-container {
     background-color: var(--bg-container);
-    max-width: 1200px; 
+    max-width: 1200px;
     margin: 2rem auto;
     padding: 1.5em 1.5rem;
-    border-radius:12px;
+    border-radius: 12px;
 }
 
 .recipe-page-header {

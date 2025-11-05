@@ -3,6 +3,33 @@
     margin: 2rem auto;
     padding: 0 1rem;
 }
+.title-like-wrapper{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:1rem;
+    margin-bottom:0.5rem;
+}
+
+.btn-like{
+    background-color:transparent;
+    border:none;
+}
+
+.btn-like:hover{
+    cursor:pointer;
+}
+
+.btn-like i{
+    font-size:2.25rem;
+}
+.not-liked i{
+    color: var(--text-color);
+}
+
+.liked i {
+    color: var(--red-color);
+}
 
 .details-card {
     background-color: var(--bg-container);

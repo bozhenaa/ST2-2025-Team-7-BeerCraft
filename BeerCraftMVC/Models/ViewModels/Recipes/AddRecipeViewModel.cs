@@ -17,12 +17,14 @@ namespace BeerCraftMVC.Models.ViewModels.Recipes
 
         [ValidateNever]
         public SelectList AvailableIngredients { get; set; }
+
         [ValidateNever]
-        public SelectList AvailableUnits { get; set; } = new SelectList(new List<string> { "g", "kg", "ml", "l", "oz", "lb", "packet", "tsp", "tbsp" });
+        public List<string> AvailableUnits { get; set; } =
+            new List<string> { "g", "kg", "ml", "l", "oz", "lb", "packet", "tsp", "tbsp" };
 
         public AddRecipeViewModel()
         {
-            Ingredients.Add(new RecipeIngredientInputModel());
+          
         }
     }
 }

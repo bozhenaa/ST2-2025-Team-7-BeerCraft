@@ -30,7 +30,8 @@
 
 .profile-details-section,
 .profile-inventory-section,
-.profile-recipes-section {
+.profile-recipes-section,
+.profile-liked-recipes-section {
     background-color: var(--bg-container);
     padding: 1.5rem;
     border-radius: 8px;

@@ -6,6 +6,6 @@
             public string IngredientName { get; set; }
             public double Quantity { get; set; }
             public string Unit { get; set; }
-            public string IngredientTypeName { get; set; } // Напр. "Малц", "Хмел"
+            public string IngredientTypeName { get; set; }
     }
 }

@@ -14,7 +14,8 @@ using System.Security.Claims;
 namespace BeerCraftMVC.Controllers
 {
     /// <summary>
-    /// Контролер за управление на Login/Register страницата със съответната логика. Показва страницата Access.cshtml
+    /// Контролер за управление на Login/Register страницата със съответната логика,
+    /// както и Profile page на потребителя. 
     /// </summary>
     public class AccountController : Controller
     {
@@ -212,7 +213,14 @@ namespace BeerCraftMVC.Controllers
             {
                 Id = r.Id,
                 Name = r.Name
-            }).ToList()
+            }).ToList(),
+                LikedRecipes = user.LikedRecipes
+                .Select(lr => lr.Recipe)
+                .OrderBy(r =>r.CreatedAt)
+                .Select(r =>new UserRecipeViewModel{
+                    Id = r.Id,
+                    Name = r.Name
+                }).ToList()
             };
             //попълва информацията за потребителя и неговия инвентар
             return View(viewModel);

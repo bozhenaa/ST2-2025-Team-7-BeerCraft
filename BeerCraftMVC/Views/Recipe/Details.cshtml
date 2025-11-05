@@ -12,7 +12,30 @@
     <article class="details-card">
 
         <header class="details-header">
-            <h1>@Model.Name</h1>
+            <div class="title-like-wrapper">
+                <h1>@Model.Name</h1>
+
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <form asp-action="LikeRecipe" asp-route-id="@Model.Id" method="post" class="like-form">
+                        @Html.AntiForgeryToken()
+
+                        @if (Model.IsLikedByCurrentUser)
+                        {
+                            <button type="submit" class="btn-like liked" title="Click to unlike this recipe">
+                                <i class="fa-duotone fa-solid fa-heart"></i>
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn-like not-liked" title="Click to like this recipe">
+                                <i class="fa-duotone fa-solid fa-heart"></i>
+                            </button>
+                        }
+                    </form>
+                }
+            </div>
+            
             <div class="recipe-meta">
                 <span>By: <strong>@Model.AuthorUsername</strong></span>
                 <span>On: <time datetime="@Model.CreatedAt.ToString("yyyy-MM-dd")">@Model.CreatedAt.ToString("MMM dd, yyyy")</time></span>
@@ -48,6 +71,7 @@
 
         <footer class="details-actions">
             <a asp-action="Index" class="btn btn-secondary">Back to all recipes</a>
+           
 
             @if (User.Identity != null && User.Identity.Name == Model.AuthorUsername)
             {

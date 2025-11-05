@@ -35,6 +35,15 @@ namespace BeerCraftMVC.Controllers
             var authors = await _context.Users
                                         .Where(u => authorIds.Contains(u.Id))
                                         .ToDictionaryAsync(u => u.Id, u => u.Username);
+            var userId = GetUser();
+            var likedIds = new HashSet<int>();
+            if (userId > 0)
+            {
+                likedIds = await _context.LikedRecipes
+                    .Where(lr => lr.UserId == userId)
+                    .Select(lr => lr.RecipeId)
+                    .ToHashSetAsync();
+            }
 
             var recipeItems = recipesFromDb.Select(r => new RecipeIndexItemViewModel
             {
@@ -44,7 +53,8 @@ namespace BeerCraftMVC.Controllers
                 AuthorUsername = authors.ContainsKey(r.CreatedByUserId)
                                     ? authors[r.CreatedByUserId]
                                     : "Unknown",
-                CreatedAt = r.CreatedAt
+                CreatedAt = r.CreatedAt,
+                IsLiked = likedIds.Contains(r.Id)
             }).ToList();
 
             var model = new RecipeIndexViewModel
@@ -67,13 +77,30 @@ namespace BeerCraftMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AddRecipeViewModel viewModel)
         {
-            viewModel.Ingredients.RemoveAll(i => i.IngredientId == 0 || i.Quantity <= 0 || string.IsNullOrEmpty(i.Unit));
+            for (int i = 0; i < viewModel.Ingredients.Count; i++)
+{
+            var ing = viewModel.Ingredients[i];
+            if (ing.IngredientId == 0 || ing.Quantity <= 0 || string.IsNullOrEmpty(ing.Unit))
+                ModelState.AddModelError($"Ingredients[{i}]", "Invalid ingredient data");
+}
 
             if (!viewModel.Ingredients.Any())
             {
                 ModelState.AddModelError("Ingredients", "Add at least one ingredient to create recipe");
             }
-
+            if (viewModel.Ingredients != null)
+            {
+                var duplicated = viewModel.Ingredients
+                    .GroupBy(i => i.IngredientId)
+                    .Where(g => g.Count() > 1)
+                    .Select(g => g.Key)
+                    .ToList();
+                if(duplicated.Any())
+                {
+                    ModelState.AddModelError("", "You have added the same ingredient multiple times. Combine or remove the duplicates");
+                   
+                }
+            }
             if (ModelState.IsValid)
             {
                 var userId = GetUser();
@@ -113,6 +140,13 @@ namespace BeerCraftMVC.Controllers
             var author = await _context.Users.FindAsync(recipe.CreatedByUserId);
             var authorUsername = author?.Username ?? "Unknown";
 
+            var userId = GetUser();
+            bool isLiked = false;
+            if (userId > 0)
+            {
+                isLiked = await _context.LikedRecipes.AnyAsync(lr => lr.RecipeId == id && lr.UserId == userId);
+            }
+
             var viewModel = new RecipeDetailViewModel
             {
                 Id = recipe.Id,
@@ -127,7 +161,8 @@ namespace BeerCraftMVC.Controllers
                     Quantity = ri.Quantity,
                     Unit = ri.Unit,
                     IngredientTypeName = ri.Ingredient.IngredientType?.Name ?? "N/A"
-                }).ToList()
+                }).ToList(),
+                IsLikedByCurrentUser = isLiked
             };
 
             return View(viewModel);
@@ -138,7 +173,6 @@ namespace BeerCraftMVC.Controllers
             var ingredientsData = await _recipeRepository.GetAllIngredientsSimpleAsync();
             viewModel.AvailableIngredients = new SelectList(ingredientsData, "Id", "Name");
 
-            viewModel.AvailableUnits = new SelectList(new List<string> { "g", "kg", "ml", "l", "oz", "lb", "packet", "tsp", "tbsp" });
         }
 
         private int GetUser()
@@ -169,9 +203,9 @@ namespace BeerCraftMVC.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-    
 
-    [HttpGet]
+
+        [HttpGet]
         public async Task<IActionResult> SearchSuggestion(string term)
         {
             if (string.IsNullOrEmpty(term) || term.Length < 2)
@@ -191,6 +225,37 @@ namespace BeerCraftMVC.Controllers
                 .ToListAsync();
 
             return Json(suggestions);
+        }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> LikeRecipe(int id)
+        {
+            var userId = GetUser();
+            if (userId == 0)
+            {
+                return Unauthorized();
+            }
+            var recipeId = id;
+            var isLiked = await _context.LikedRecipes
+                .FirstOrDefaultAsync(lr => lr.RecipeId == recipeId && lr.UserId == userId);
+            if(isLiked==null)
+            {
+                var newLike = new LikedRecipe
+                {
+                    UserId = userId,
+                    RecipeId = recipeId,
+                    LikedAt = DateTime.Now,
+                };
+                _context.LikedRecipes.Add(newLike);
+            }
+            else
+            {
+                _context.LikedRecipes.Remove(isLiked);  
+            }
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Details", new { id = recipeId });
         }
 
     }

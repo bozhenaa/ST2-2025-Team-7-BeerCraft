@@ -234,6 +234,16 @@ h4.mt-4 {
     border-bottom-width: 1px;
     width: 100%;
 }
+select option{
+    background-color: var(--stripe-color, #fff);
+    color: var(--text-color);
+    border: 1px solid var(--text-color);
+}
+    select option:hover,
+    select option:checked {
+        background-color: var(--accent-color);
+        color: var(--button-text);
+    }
 
 .ingredient-row-modern .form-label {
     font-weight: 700;
@@ -242,17 +252,6 @@ h4.mt-4 {
     font-size: 0.9rem;
     text-transform: uppercase;
 }
-
-.new-ingredient-fields {
-    margin-top: 10px;
-    padding-left: 10px;
-    border-left: 2px solid var(--accent-color);
-}
-
-    .new-ingredient-fields .form-control,
-    .new-ingredient-fields .form-select {
-        margin-bottom: 10px;
-    }
 
 .ingredient-remove-action {
     flex-shrink: 0;
