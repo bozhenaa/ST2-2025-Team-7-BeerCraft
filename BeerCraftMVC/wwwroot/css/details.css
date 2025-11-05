@@ -5,7 +5,7 @@
 }
 
 .details-card {
-    background-color: var(--stripe-color, #fff);
+    background-color: var(--bg-container);
     border-radius: 12px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.09);
     overflow: hidden;
@@ -27,7 +27,7 @@
 
 .recipe-meta {
     font-size: 0.95rem;
-    color: rgba(var(--text-color-rgb, 51, 46, 44), 0.7);
+    color:var(--text-color);
 }
 
     .recipe-meta span {
@@ -98,11 +98,11 @@ hr.recipe-divider {
 
     .ingredient-list .ingredient-type {
         font-size: 0.85rem;
-        color: rgba(var(--text-color-rgb, 51, 46, 44), 0.6);
+        color: var(--accent-color);
     }
 
 .details-actions {
-    background-color: #f8f9fa;
+    background-color: var(--bg-color-dark);
     padding: 1.5rem 3rem;
     border-top: 1px solid rgba(var(--text-color-rgb, 51, 46, 44), 0.1);
     display: flex;
@@ -118,6 +118,7 @@ hr.recipe-divider {
     .btn{
         font-size:1em;
         padding:10px 10px;
+        border-color:var(--accent-color);
     }
 .btn-danger {
     background-color: #D9534F;

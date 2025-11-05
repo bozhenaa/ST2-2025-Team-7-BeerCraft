@@ -22,8 +22,9 @@
     --button-bg: #353709; /* Тъмно каки/зелено (*/
     --button-text: #FFFFFF; /* Бяло */
     --current-page: #bcb837; /* Ярко жълто-зелено/лайм */
-    --bg-color-dark: #1c1d13; /*Много тъмно зелено/сиво*/
-    --font-headingS: 'Anton', sans-serif;
+    --bg-color-dark: #1c1d13; /*Много тъмно зелено/сиво */
+    --bg-container: #24242459; /* Прозрачен фон за контейнери */
+    --font-headingS: 'Russo One', sans-serif;
     --font-body: 'Montserrat', sans-serif;
     --font-heading: 'Oswald', sans-serif;
 }
@@ -136,12 +137,13 @@ body.home-page {
 }
 
 .home-page .page-header {
-    padding: 20px 40px 20px 40px;
+    padding: 20px 40px 20px 20px;
     align-items: flex-end;
 }
 
 .home-page .logo {
     font-size: 6rem;
+
 }
 
 .home-page .navigation p {
@@ -173,7 +175,7 @@ body.home-page {
 
     .btn-primary:hover {
         background-color: transparent;
-        color: var(--button-bg);
+        color: var(--accent-color);
         cursor: pointer;
     }
 

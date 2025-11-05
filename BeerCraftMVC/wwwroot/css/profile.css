@@ -3,27 +3,22 @@
 }
 
 .profile-container {
-    /* ПРОМЯНА: Увеличена максимална ширина, за да има място за 2 колони */
     max-width: 1100px;
     margin: 2rem auto;
     padding: 2rem;
-    background-color: var(--stripe-color, #fff);
+    background-color: var(--bg-container);
     border-radius: 15px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.09);
-    /* НОВО: Добавяме CSS Grid */
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Две равни колони */
-    gap: 2rem; /* Разстояние между елементите в грида */
+    grid-template-columns: 1fr 1fr; 
+    gap: 2rem; 
 }
 
 .profile-header {
     text-align: center;
     border-bottom: 1px solid rgba(var(--text-color-rgb, 51, 46, 44), 0.1);
     padding-bottom: 1rem;
-    /* ПРОМЯНА: Премахваме margin-a, гридът ще се грижи за разстоянието */
-    /* margin-bottom: 2rem; */
-    /* НОВО: Караме този елемент да се разпъне през двете колони */
-    grid-column: 1 / -1; /* (от 1-ва до последна линия) */
+    grid-column: 1 / -1; 
 }
 
     .profile-header h1 {
@@ -36,7 +31,7 @@
 .profile-details-section,
 .profile-inventory-section,
 .profile-recipes-section {
-    background-color: rgba(var(--accent-color-rgb, 180, 122, 59), 0.03);
+    background-color: var(--bg-container);
     padding: 1.5rem;
     border-radius: 8px;
 }
