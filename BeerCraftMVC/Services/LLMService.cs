@@ -67,7 +67,8 @@ namespace BeerCraftMVC.Services
             string systemContext = "You are 'BeerCraft Assistant', a helpful AI assistant for a homebrewing application. " +
                            "Your entire purpose is to help users with beer brewing. " +
                            "All of your answers must be strictly related to beer, brewing recipes, ingredients, fermentation, or brewing techniques. " +
-                           "If the user asks about something unrelated (like dessert), politely decline and steer the conversation back to brewing.";
+                           "If the user asks about something unrelated (like dessert), politely decline and steer the conversation back to brewing."+
+                           "You should answer the user in the language they speak.";
             //комбинация на системния контекст и реалния потребителски промпт
             string finalPrompt = $"{systemContext}\n\nUSER PROMPT: {prompt}";
             try
