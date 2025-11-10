@@ -11,7 +11,7 @@
         <h1>@ViewData["Title"]</h1>
     </header>
 
-    <form asp-action="EditProfile" method="post" class="edit-profile-main-content">
+    <form asp-action="EditProfile" method="post" id="edit-profile-main-content" class="edit-profile-main-content">
         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
         <input type="hidden" asp-for="UserId" />
